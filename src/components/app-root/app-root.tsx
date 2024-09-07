@@ -10,7 +10,7 @@ export class AppRoot {
     return (
       <div>
         <header>
-          <h1>Welcome to Stencil</h1>
+          <h1>Stencil Form Telemetry Builder - Demo</h1>
         </header>
         <main>
           <telemetry-wrapper component-id="address-form">
