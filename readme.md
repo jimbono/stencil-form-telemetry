@@ -13,7 +13,7 @@ This project demonstrates a non-intrusive, event-agnostic telemetry system imple
 ## Project Structure
 
 ```
-your-project-name/
+form-telemetry/
 ├── src/
 │   ├── components/
 │   │   ├── app-root/
