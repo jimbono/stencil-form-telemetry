@@ -3,99 +3,100 @@
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [Key Components](#key-components)
-3. [Telemetry Implementation Details](#telemetry-implementation-details)
-4. [Performance Optimizations](#performance-optimizations)
-5. [Extensibility](#extensibility)
-6. [Testing](#testing)
-7. [Deployment Considerations](#deployment-considerations)
-8. [Future Enhancements](#future-enhancements)
+2. [Project Structure](#project-structure)
+3. [Key Components](#key-components)
+4. [Telemetry Implementation Details](#telemetry-implementation-details)
+5. [Performance Optimizations](#performance-optimizations)
+6. [Extensibility Features](#extensibility-features)
+7. [Testing](#testing)
+8. [Deployment Considerations](#deployment-considerations)
+9. [Future Enhancements](#future-enhancements)
 
 ## Overview
 
-This project implements an address form component with advanced telemetry capabilities using Stencil. It demonstrates how to effectively collect user behavior data while maintaining high performance and scalability, with a focus on comprehensive component lifecycle tracking.
+This project implements an address form and user profile component with advanced telemetry capabilities using Stencil. It demonstrates how to effectively collect user behavior data while maintaining high performance and scalability, with a focus on comprehensive component lifecycle tracking and extensibility.
+
+## Project Structure
+
+```
+address-form-telemetry/
+├── src/
+│   ├── components/
+│   │   ├── app-root/
+│   │   │   ├── app-root.tsx
+│   │   │   └── app-root.css
+│   │   ├── address-form/
+│   │   │   ├── address-form.tsx
+│   │   │   └── address-form.css
+│   │   └── user-profile/
+│   │       ├── user-profile.tsx
+│   │       └── user-profile.css
+│   ├── utils/
+│   │   ├── telemetry-service.ts
+│   │   ├── telemetry-batcher.ts
+│   │   └── telemetry-types.ts
+│   ├── global/
+│   │   └── app.css
+│   ├── index.html
+│   └── index.ts
+├── stencil.config.ts
+├── package.json
+├── tsconfig.json
+├── README.md
+└── PROJECT_DOCUMENTATION.md
+```
 
 ## Key Components
 
-### 1. Address Form Component (`address-form.tsx`)
-
-The main component that renders the address form and collects user interactions.
-
-Key features:
-- Renders input fields for name, street, city, state, and zip code
-- Emits telemetry events for component lifecycle, field blur, and form submission
-- Uses Stencil's lifecycle methods and IntersectionObserver for comprehensive tracking
-
-### 2. App Root Component (`app-root.tsx`)
-
-The root component of the application.
-
-Key features:
-- Provides the main structure of the application
-- Demonstrates telemetry implementation at the application root level
-- Tracks its own lifecycle and visibility events
-
-### 3. Telemetry Service (`telemetry-service.ts`)
-
-A singleton service that manages telemetry event processing.
-
-Key features:
-- Implements a global event bus using CustomEvents
-- Provides methods for emitting telemetry events
-- Handles event sampling based on configurable rates
-
-### 4. Telemetry Batcher (`telemetry-batcher.ts`)
-
-Manages the batching and sending of telemetry events.
-
-Key features:
-- Buffers events up to a configurable batch size
-- Implements a flush interval for timely data transmission
-- Compresses data using Pako before sending
-
-### 5. Telemetry Types (`telemetry-types.ts`)
-
-Defines the structure of telemetry events and event types.
-
-Key features:
-- Provides a TypeScript interface for telemetry events
-- Defines an enum for all telemetry event types
+1. **Address Form Component** (`address-form.tsx`): Renders the address form and collects user interactions.
+2. **User Profile Component** (`user-profile.tsx`): Displays user information and demonstrates advanced telemetry integration.
+3. **App Root Component** (`app-root.tsx`): Provides the main structure of the application and integrates other components.
+4. **Telemetry Service** (`telemetry-service.ts`): Manages telemetry event processing.
+5. **Telemetry Batcher** (`telemetry-batcher.ts`): Handles batching and sending of telemetry events.
+6. **Telemetry Types** (`telemetry-types.ts`): Defines structures and types for telemetry events and user data.
 
 ## Telemetry Implementation Details
 
 ### Event Types
 
-1. `ComponentMount`: Emitted when a component is mounted
-2. `ComponentRender`: Emitted when a component finishes rendering
-3. `ComponentVisible`: Emitted when a component becomes visible in the viewport
-4. `ComponentUnmount`: Emitted when a component is unmounted
-5. `FieldBlur`: Emitted when a form field loses focus
-6. `FormSubmit`: Emitted when the form is submitted
+```typescript
+export enum TelemetryEventType {
+  ComponentMount = 'componentMount',
+  ComponentRender = 'componentRender',
+  ComponentVisible = 'componentVisible',
+  ComponentUnmount = 'componentUnmount',
+  FieldBlur = 'fieldBlur',
+  FormSubmit = 'formSubmit',
+  UserInteraction = 'userInteraction',
+  PerformanceMetric = 'performanceMetric',
+  ErrorOccurred = 'errorOccurred'
+}
+```
 
 ### Sampling Strategy
 
 Configurable sampling rates are implemented in `TelemetryService`:
 
 ```typescript
-private shouldSampleEvent(eventType: string): boolean {
-  const samplingRates = {
-    [TelemetryEventType.FormSubmit]: 1,    // 100% sampling
-    [TelemetryEventType.FieldBlur]: 0.1,   // 10% sampling
-    [TelemetryEventType.ComponentRender]: 0.5, // 50% sampling
-    [TelemetryEventType.ComponentVisible]: 0.5, // 50% sampling
-    'default': 0.5      // 50% sampling
-  };
-  const rate = samplingRates[eventType] || samplingRates['default'];
-  return Math.random() < rate;
-}
+private samplingRates: { [key: string]: number } = {
+  [TelemetryEventType.FormSubmit]: 1,
+  [TelemetryEventType.FieldBlur]: 0.1,
+  [TelemetryEventType.ComponentRender]: 0.5,
+  [TelemetryEventType.ComponentVisible]: 0.5,
+  [TelemetryEventType.UserInteraction]: 0.2,
+  [TelemetryEventType.PerformanceMetric]: 1,
+  [TelemetryEventType.ErrorOccurred]: 1,
+  'default': 0.5
+};
 ```
 
 ### Data Flow
 
 1. Components emit events using `telemetry.emit()`
 2. Events are captured by the global event listener in `TelemetryService`
-3. Events are sampled and added to the `TelemetryBatcher`
-4. `TelemetryBatcher` accumulates events and periodically sends them in batches
+3. Events are sampled based on configurable rates
+4. Sampled events are added to the `TelemetryBatcher`
+5. `TelemetryBatcher` accumulates events and periodically sends them in batches
 
 ### Visibility Tracking
 
@@ -124,41 +125,77 @@ private observeVisibility() {
 
 ## Performance Optimizations
 
-1. **Event Batching**: Reduces the number of network requests by grouping events.
+1. **Event Batching**: Reduces network requests by grouping events.
 2. **Data Compression**: Minimizes payload size using Pako compression.
-3. **Sampling**: Reduces data volume while maintaining statistical significance.
+3. **Configurable Sampling**: Reduces data volume while maintaining statistical significance.
 4. **Asynchronous Processing**: Uses `CustomEvents` for non-blocking operations.
 5. **Efficient Visibility Tracking**: Uses IntersectionObserver for performant visibility detection.
 
-## Extensibility
+## Extensibility Features
 
-The current implementation can be easily extended to:
+### 1. Dynamic Sampling Rates
 
-1. Add new event types by updating the `TelemetryEventType` enum and emitting new event types from components
-2. Implement more sophisticated sampling strategies in `TelemetryService`
-3. Extend the `TelemetryBatcher` to handle different types of data or transmission methods
-4. Add new components with built-in telemetry by following the patterns in `address-form.tsx` and `app-root.tsx`
+The `TelemetryService` allows dynamic adjustment of sampling rates:
+
+```typescript
+public setSamplingRate(eventType: string, rate: number) {
+  if (rate >= 0 && rate <= 1) {
+    this.samplingRates[eventType] = rate;
+  } else {
+    console.error(`Invalid sampling rate for ${eventType}. Rate must be between 0 and 1.`);
+  }
+}
+```
+
+### 2. Extended Event Types
+
+New event types have been added to capture a wider range of telemetry data, including user interactions and performance metrics.
+
+### 3. Dependency Injection
+
+The `UserProfile` component demonstrates dependency injection with `UserService`, allowing for easy testing and flexibility:
+
+```typescript
+@Prop() userService: UserService;
+```
+
+### 4. Global Styles
+
+Added global styles in `src/global/app.css` for consistent styling across components.
 
 ## Testing
 
 To implement unit tests for the telemetry system:
 
-1. Test `TelemetryService` for correct event emission and sampling
-2. Test `TelemetryBatcher` for correct batching behavior and compression
-3. Use Stencil's testing utilities to verify component-level telemetry in `AddressForm` and `AppRoot`
+1. Test `TelemetryService` for correct event emission, sampling, and rate adjustment
+2. Test `TelemetryBatcher` for correct batching, compression, and retry logic
+3. Use Stencil's testing utilities to verify component-level telemetry in all components
 4. Test visibility tracking using mock IntersectionObserver implementations
+5. For `UserProfile` component:
+   - Create a mock `UserService` implementation for unit tests
+   - Test component lifecycle telemetry events
+   - Test performance metric emission for data fetching
+   - Test error handling and corresponding telemetry events
+   - Test user interaction telemetry events
 
 ## Deployment Considerations
 
-1. Ensure the server endpoint for receiving telemetry data is set up and can handle the expected data format
-2. Consider implementing a queuing system on the server to handle high volumes of incoming telemetry data
-3. Set up monitoring for the telemetry system to track its performance and reliability
-4. Ensure compliance with data protection regulations (e.g., GDPR) when collecting and processing telemetry data
+1. Set up a robust server endpoint to handle telemetry data ingestion
+2. Implement a queuing system for high-volume data processing
+3. Ensure proper error handling and logging on the server side
+4. Set up monitoring for the telemetry system to track performance and reliability
+5. Implement data retention and purging policies in compliance with data protection regulations
+6. Consider using a time-series database for efficient storage and querying of telemetry data
 
 ## Future Enhancements
 
-1. Implement real-time analytics dashboard for visualizing telemetry data
+1. Implement a real-time analytics dashboard for visualizing telemetry data
 2. Add support for A/B testing by extending the telemetry system
 3. Implement user session tracking for more contextualized telemetry data
 4. Develop a system for dynamically updating sampling rates based on current system load or data importance
 5. Integrate machine learning models for predictive analytics based on collected telemetry data
+6. Implement a plugin system to allow easy addition of custom telemetry processors
+7. Create a configuration UI for adjusting telemetry settings in real-time
+8. Implement a real backend for the UserService
+9. Add more interactive features to the UserProfile component
+10. Extend telemetry to track user behavior across multiple components in a micro frontend architecture

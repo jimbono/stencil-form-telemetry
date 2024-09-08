@@ -1,6 +1,6 @@
 import { Component, h, State, Element } from '@stencil/core';
 import { telemetry } from '../../utils/telemetry-service';
-import { TelemetryEventType } from '../../utils/telemetry-types';
+import { TelemetryEventType, FormCompletionTimeData } from '../../utils/telemetry-types';
 
 @Component({
   tag: 'address-form',
@@ -12,16 +12,18 @@ export class AddressForm {
   @Element() el: HTMLElement;
 
   private formFields: string[] = ['name', 'street', 'city', 'state', 'zipCode'];
+  private formStartTime: number;
   private intersectionObserver: IntersectionObserver;
 
   componentWillLoad() {
     telemetry.emit(TelemetryEventType.ComponentMount, { name: 'AddressForm' });
+    this.formStartTime = performance.now();
   }
 
   componentDidLoad() {
     telemetry.emit(TelemetryEventType.ComponentRender, { 
       name: 'AddressForm',
-      renderTime: performance.now() // This is a simplification. For more accurate timing, you'd need to store the start time at the beginning of the render cycle.
+      renderTime: performance.now() - this.formStartTime
     });
     this.observeVisibility();
   }
@@ -46,7 +48,7 @@ export class AddressForm {
           }
         });
       },
-      { threshold: 0.5 } // Component is considered visible when 50% is in view
+      { threshold: 0.5 }
     );
 
     this.intersectionObserver.observe(this.el);
@@ -59,13 +61,29 @@ export class AddressForm {
 
   handleBlur(event: Event, field: string) {
     const input = event.target as HTMLInputElement;
-    telemetry.emit(TelemetryEventType.FieldBlur, { field, value: input.value, component: 'AddressForm' });
+    telemetry.emit(TelemetryEventType.FieldBlur, { field, value: input.value });
   }
 
   handleSubmit(event: Event) {
     event.preventDefault();
-    telemetry.emit(TelemetryEventType.FormSubmit, { formData: this.formData, component: 'AddressForm' });
+    const completionTime = performance.now() - this.formStartTime;
+    
+    // Emit form submission event
+    telemetry.emit(TelemetryEventType.FormSubmit, this.formData);
+    
+    // Emit form completion time event
+    const formCompletionData: FormCompletionTimeData = {
+      formId: 'AddressForm',
+      completionTime: completionTime,
+      fieldCount: this.formFields.length
+    };
+    telemetry.emit(TelemetryEventType.FormCompletionTime, formCompletionData);
+
     console.log('Form submitted:', this.formData);
+    console.log('Form completion time:', completionTime, 'ms');
+
+    // Reset the form start time for the next submission
+    this.formStartTime = performance.now();
   }
 
   render() {

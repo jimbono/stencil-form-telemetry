@@ -4,6 +4,17 @@ import { TelemetryEvent, TelemetryEventType } from './telemetry-types';
 class TelemetryService {
   private static instance: TelemetryService;
   private batcher: TelemetryBatcher;
+  private samplingRates: { [key: string]: number } = {
+    [TelemetryEventType.FormSubmit]: 1,
+    [TelemetryEventType.FieldBlur]: 0.1,
+    [TelemetryEventType.ComponentRender]: 0.5,
+    [TelemetryEventType.ComponentVisible]: 0.5,
+    [TelemetryEventType.UserInteraction]: 0.2,
+    [TelemetryEventType.PerformanceMetric]: 1,
+    [TelemetryEventType.ErrorOccurred]: 1,
+    [TelemetryEventType.FormCompletionTime]: 1,  // Always capture form completion time
+    'default': 0.5
+  };
 
   private constructor() {
     this.batcher = new TelemetryBatcher();
@@ -30,15 +41,16 @@ class TelemetryService {
   }
 
   private shouldSampleEvent(eventType: string): boolean {
-    const samplingRates = {
-      [TelemetryEventType.FormSubmit]: 1,    // 100% sampling
-      [TelemetryEventType.FieldBlur]: 0.1,   // 10% sampling
-      [TelemetryEventType.ComponentRender]: 0.5, // 50% sampling
-      [TelemetryEventType.ComponentVisible]: 0.5, // 50% sampling
-      'default': 0.5      // 50% sampling
-    };
-    const rate = samplingRates[eventType] || samplingRates['default'];
+    const rate = this.samplingRates[eventType] || this.samplingRates['default'];
     return Math.random() < rate;
+  }
+
+  public setSamplingRate(eventType: string, rate: number) {
+    if (rate >= 0 && rate <= 1) {
+      this.samplingRates[eventType] = rate;
+    } else {
+      console.error(`Invalid sampling rate for ${eventType}. Rate must be between 0 and 1.`);
+    }
   }
 
   public emit(eventType: TelemetryEventType, eventData: any) {

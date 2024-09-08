@@ -1,6 +1,19 @@
 import { Component, h, Element } from '@stencil/core';
 import { telemetry } from '../../utils/telemetry-service';
-import { TelemetryEventType } from '../../utils/telemetry-types';
+import { UserService, TelemetryEventType } from '../../utils/telemetry-types';
+
+class MockUserService implements UserService {
+  async getUserData(userId: string) {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return {
+      id: userId,
+      name: 'John Doe',
+      email: 'john@example.com',
+      location: 'New York'
+    };
+  }
+}
 
 @Component({
   tag: 'app-root',
@@ -8,7 +21,9 @@ import { TelemetryEventType } from '../../utils/telemetry-types';
   shadow: true,
 })
 export class AppRoot {
+  
   @Element() el: HTMLElement;
+  private userService = new MockUserService();
 
   private intersectionObserver: IntersectionObserver;
 
@@ -58,6 +73,7 @@ export class AppRoot {
         </header>
         <main>
           <address-form></address-form>
+          <user-profile user-id="12345" userService={this.userService}></user-profile>
         </main>
       </div>
     );

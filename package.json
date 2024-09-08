@@ -1,7 +1,7 @@
 {
   "name": "address-form-telemetry",
   "version": "0.0.1",
-  "description": "Address Form with Enhanced Telemetry",
+  "description": "Address Form with Telemetry and User Profile",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "es2015": "dist/esm/index.mjs",

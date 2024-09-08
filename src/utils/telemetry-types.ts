@@ -6,9 +6,42 @@ export interface TelemetryEvent {
   
   export enum TelemetryEventType {
     ComponentMount = 'componentMount',
-    ComponentUnmount = 'componentUnmount',
     ComponentRender = 'componentRender',
     ComponentVisible = 'componentVisible',
+    ComponentUnmount = 'componentUnmount',
     FieldBlur = 'fieldBlur',
-    FormSubmit = 'formSubmit'
+    FormSubmit = 'formSubmit',
+    UserInteraction = 'userInteraction',
+    PerformanceMetric = 'performanceMetric',
+    ErrorOccurred = 'errorOccurred',
+    FormCompletionTime = 'formCompletionTime'  // New event type
+  }
+  
+  export interface PerformanceMetricData {
+    metricName: string;
+    value: number;
+    unit: string;
+  }
+  
+  export interface ErrorData {
+    message: string;
+    stack?: string;
+    componentName?: string;
+  }
+  
+  export interface UserData {
+    id: string;
+    name: string;
+    email: string;
+    location: string;
+  }
+  
+  export interface UserService {
+    getUserData(userId: string): Promise<UserData>;
+  }
+  
+  export interface FormCompletionTimeData {
+    formId: string;
+    completionTime: number;
+    fieldCount: number;
   }

@@ -5,12 +5,17 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { UserService } from "./utils/telemetry-types";
 export namespace Components {
     interface AddressForm {
     }
     interface AppRoot {
     }
     interface TestComponent {
+    }
+    interface UserProfile {
+        "userId": string;
+        "userService": UserService;
     }
 }
 declare global {
@@ -32,10 +37,17 @@ declare global {
         prototype: HTMLTestComponentElement;
         new (): HTMLTestComponentElement;
     };
+    interface HTMLUserProfileElement extends Components.UserProfile, HTMLStencilElement {
+    }
+    var HTMLUserProfileElement: {
+        prototype: HTMLUserProfileElement;
+        new (): HTMLUserProfileElement;
+    };
     interface HTMLElementTagNameMap {
         "address-form": HTMLAddressFormElement;
         "app-root": HTMLAppRootElement;
         "test-component": HTMLTestComponentElement;
+        "user-profile": HTMLUserProfileElement;
     }
 }
 declare namespace LocalJSX {
@@ -45,10 +57,15 @@ declare namespace LocalJSX {
     }
     interface TestComponent {
     }
+    interface UserProfile {
+        "userId"?: string;
+        "userService"?: UserService;
+    }
     interface IntrinsicElements {
         "address-form": AddressForm;
         "app-root": AppRoot;
         "test-component": TestComponent;
+        "user-profile": UserProfile;
     }
 }
 export { LocalJSX as JSX };
@@ -58,6 +75,7 @@ declare module "@stencil/core" {
             "address-form": LocalJSX.AddressForm & JSXBase.HTMLAttributes<HTMLAddressFormElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "test-component": LocalJSX.TestComponent & JSXBase.HTMLAttributes<HTMLTestComponentElement>;
+            "user-profile": LocalJSX.UserProfile & JSXBase.HTMLAttributes<HTMLUserProfileElement>;
         }
     }
 }

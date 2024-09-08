@@ -5,6 +5,8 @@ export class TelemetryBatcher {
   private buffer: TelemetryEvent[] = [];
   private batchSize: number = 50;
   private flushInterval: number = 30000; // 30 seconds
+  private retryAttempts: number = 3;
+  private retryDelay: number = 5000; // 5 seconds
 
   constructor() {
     setInterval(() => this.flush(), this.flushInterval);
@@ -17,11 +19,24 @@ export class TelemetryBatcher {
     }
   }
 
-  private flush() {
+  private async flush() {
     if (this.buffer.length > 0) {
-      const compressedData = this.compressData(this.buffer);
-      this.sendToServer(compressedData);
+      const eventsToSend = [...this.buffer];
       this.buffer = [];
+      await this.sendWithRetry(eventsToSend);
+    }
+  }
+
+  private async sendWithRetry(events: TelemetryEvent[], attempt: number = 1) {
+    try {
+      const compressedData = this.compressData(events);
+      await this.sendToServer(compressedData);
+    } catch (error) {
+      if (attempt < this.retryAttempts) {
+        setTimeout(() => this.sendWithRetry(events, attempt + 1), this.retryDelay);
+      } else {
+        console.error('Failed to send telemetry data after multiple attempts', error);
+      }
     }
   }
 
@@ -29,9 +44,11 @@ export class TelemetryBatcher {
     return pako.deflate(JSON.stringify(data));
   }
 
-  private sendToServer(data: Uint8Array) {
+  private async sendToServer(data: Uint8Array): Promise<void> {
     // In a real implementation, you would send this data to your server
     // For this example, we'll just log it to the console
     console.log('Sending compressed telemetry data:', data);
+    // Simulate network request
+    await new Promise(resolve => setTimeout(resolve, 1000));
   }
 }
