@@ -1,13 +1,15 @@
 # Address Form with Enhanced Telemetry
 
-This project demonstrates a high-performance, scalable implementation of an address form component with advanced telemetry capabilities. Built using Stencil, it showcases best practices for collecting user behavior data while minimizing performance impact.
+This project demonstrates a high-performance, scalable implementation of an address form and user profile component with advanced telemetry capabilities. Built using Stencil, it showcases best practices for collecting user behavior data and business metrics while maintaining high performance and scalability.
 
 ## Features
 
 - Reusable address form web component
+- User profile component demonstrating advanced telemetry integration
 - Enhanced telemetry system with performance optimizations
 - Non-intrusive data collection using a global event bus
 - Comprehensive component lifecycle tracking
+- Business metric tracking (e.g., form completion time)
 
 ## Project Structure
 
@@ -18,13 +20,18 @@ address-form-telemetry/
 │   │   ├── app-root/
 │   │   │   ├── app-root.tsx
 │   │   │   └── app-root.css
-│   │   └── address-form/
-│   │       ├── address-form.tsx
-│   │       └── address-form.css
+│   │   ├── address-form/
+│   │   │   ├── address-form.tsx
+│   │   │   └── address-form.css
+│   │   └── user-profile/
+│   │       ├── user-profile.tsx
+│   │       └── user-profile.css
 │   ├── utils/
 │   │   ├── telemetry-service.ts
 │   │   ├── telemetry-batcher.ts
 │   │   └── telemetry-types.ts
+│   ├── global/
+│   │   └── app.css
 │   ├── index.html
 │   └── index.ts
 ├── stencil.config.ts
@@ -42,6 +49,7 @@ address-form-telemetry/
 4. **Intelligent Sampling**: Implements configurable sampling rates for different event types.
 5. **Non-Blocking Operations**: Utilizes asynchronous processing to maintain UI responsiveness.
 6. **Component Lifecycle Tracking**: Monitors component mount, render, visibility, and unmount events.
+7. **Business Metric Tracking**: Tracks important business events like form completion time.
 
 ## Getting Started
 
@@ -68,19 +76,21 @@ address-form-telemetry/
 
 ## Usage
 
-The address form component with built-in telemetry can be used in your HTML as follows:
+The address form and user profile components with built-in telemetry can be used in your HTML as follows:
 
 ```html
 <address-form></address-form>
+<user-profile user-id="12345" userService={userServiceInstance}></user-profile>
 ```
 
-Telemetry events are automatically collected and processed for both the `app-root` and `address-form` components.
+Telemetry events are automatically collected and processed.
 
 ## Customization
 
 - Adjust sampling rates in `src/utils/telemetry-service.ts`
 - Modify batch size and flush interval in `src/utils/telemetry-batcher.ts`
 - Add or modify tracked events in `src/utils/telemetry-types.ts`
+- Extend business metric tracking by adding new event types and implementing them in relevant components
 
 ## Performance Considerations
 
@@ -88,6 +98,13 @@ Telemetry events are automatically collected and processed for both the `app-roo
 - Sampling reduces data volume while maintaining insights
 - Asynchronous processing ensures smooth user experience
 - Visibility tracking uses IntersectionObserver for efficiency
+- Form completion time tracking adds minimal overhead to form submission process
+
+## Business Insights
+
+- Track form completion times to understand user behavior and form usability
+- Analyze component visibility and render times for performance optimization
+- Monitor user interactions and error rates for improving user experience
 
 ## Contributing
 
