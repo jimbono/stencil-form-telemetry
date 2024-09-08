@@ -15,7 +15,7 @@ This project implements a demo of stencil components with built-in telemetry cap
 ## Project Structure
 
 ```
-financial-services-dashboard/
+stencil-form-telemetry/
 ├── src/
 │   ├── components/
 │   │   ├── app-root/
@@ -64,7 +64,7 @@ financial-services-dashboard/
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/financial-services-dashboard.git
+   git clone https://github.com/jimbono/stencil-form-telemetry.git
    cd financial-services-dashboard
    ```
 

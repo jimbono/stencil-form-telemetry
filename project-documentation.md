@@ -21,7 +21,7 @@ This project implements a comprehensive financial services dashboard with advanc
 ## Project Structure
 
 ```
-financial-services-dashboard/
+stencil-form-telemetry/
 ├── src/
 │   ├── components/
 │   │   ├── app-root/
