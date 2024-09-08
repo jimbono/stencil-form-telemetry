@@ -108,7 +108,7 @@ Telemetry events are automatically collected and processed.
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+This code was written using a fun session with Claude AI intended to show a demo of how telemetry can be implemented when building Stencil components. This code is purely for education and hence no contributions are expected.
 
 ## License
 
