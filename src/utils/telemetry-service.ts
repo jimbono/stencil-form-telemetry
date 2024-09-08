@@ -1,5 +1,5 @@
 import { TelemetryBatcher } from './telemetry-batcher';
-import { TelemetryEvent } from './telemetry-types';
+import { TelemetryEvent, TelemetryEventType } from './telemetry-types';
 
 class TelemetryService {
   private static instance: TelemetryService;
@@ -31,15 +31,17 @@ class TelemetryService {
 
   private shouldSampleEvent(eventType: string): boolean {
     const samplingRates = {
-      'formSubmit': 1,    // 100% sampling
-      'fieldBlur': 0.1,   // 10% sampling
+      [TelemetryEventType.FormSubmit]: 1,    // 100% sampling
+      [TelemetryEventType.FieldBlur]: 0.1,   // 10% sampling
+      [TelemetryEventType.ComponentRender]: 0.5, // 50% sampling
+      [TelemetryEventType.ComponentVisible]: 0.5, // 50% sampling
       'default': 0.5      // 50% sampling
     };
     const rate = samplingRates[eventType] || samplingRates['default'];
     return Math.random() < rate;
   }
 
-  public emit(eventType: string, eventData: any) {
+  public emit(eventType: TelemetryEventType, eventData: any) {
     const event: TelemetryEvent = {
       type: eventType,
       timestamp: new Date().toISOString(),

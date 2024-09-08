@@ -7,6 +7,7 @@ This project demonstrates a high-performance, scalable implementation of an addr
 - Reusable address form web component
 - Enhanced telemetry system with performance optimizations
 - Non-intrusive data collection using a global event bus
+- Comprehensive component lifecycle tracking
 
 ## Project Structure
 
@@ -29,7 +30,8 @@ address-form-telemetry/
 ├── stencil.config.ts
 ├── package.json
 ├── tsconfig.json
-└── README.md
+├── README.md
+└── PROJECT_DOCUMENTATION.md
 ```
 
 ## Telemetry Enhancements
@@ -39,6 +41,7 @@ address-form-telemetry/
 3. **Data Compression**: Uses Pako library for efficient data compression before sending.
 4. **Intelligent Sampling**: Implements configurable sampling rates for different event types.
 5. **Non-Blocking Operations**: Utilizes asynchronous processing to maintain UI responsiveness.
+6. **Component Lifecycle Tracking**: Monitors component mount, render, visibility, and unmount events.
 
 ## Getting Started
 
@@ -71,19 +74,20 @@ The address form component with built-in telemetry can be used in your HTML as f
 <address-form></address-form>
 ```
 
-Telemetry events are automatically collected and processed.
+Telemetry events are automatically collected and processed for both the `app-root` and `address-form` components.
 
 ## Customization
 
 - Adjust sampling rates in `src/utils/telemetry-service.ts`
 - Modify batch size and flush interval in `src/utils/telemetry-batcher.ts`
-- Add or modify tracked events in `src/components/address-form/address-form.tsx`
+- Add or modify tracked events in `src/utils/telemetry-types.ts`
 
 ## Performance Considerations
 
 - Telemetry events are batched and compressed to minimize network impact
 - Sampling reduces data volume while maintaining insights
 - Asynchronous processing ensures smooth user experience
+- Visibility tracking uses IntersectionObserver for efficiency
 
 ## Contributing
 
@@ -92,3 +96,5 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+For more detailed information about the project and its implementation, please refer to the PROJECT_DOCUMENTATION.md file.
