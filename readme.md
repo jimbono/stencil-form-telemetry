@@ -1,4 +1,4 @@
-# Address Form with Enhanced Telemetry
+# Stencil Components Demo with Enhanced Telemetry - Demo
 
 This project demonstrates a high-performance, scalable implementation of an address form and user profile component with advanced telemetry capabilities. Built using Stencil, it showcases best practices for collecting user behavior data and business metrics while maintaining high performance and scalability.
 
@@ -14,7 +14,7 @@ This project demonstrates a high-performance, scalable implementation of an addr
 ## Project Structure
 
 ```
-address-form-telemetry/
+stencil-form-telemetry/
 ├── src/
 │   ├── components/
 │   │   ├── app-root/
@@ -55,8 +55,8 @@ address-form-telemetry/
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/address-form-telemetry.git
-   cd address-form-telemetry
+   git clone https://github.com/jimbono/stencil-form-telemetry.git
+   cd stencil-form-telemetry
    ```
 
 2. Install dependencies:

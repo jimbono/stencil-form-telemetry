@@ -1,4 +1,4 @@
-# Address Form Telemetry Project Documentation
+# Stencil Components Demo with Enhanced Telemetry -  Documentation
 
 ## Table of Contents
 
