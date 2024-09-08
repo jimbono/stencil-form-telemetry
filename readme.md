@@ -1,4 +1,4 @@
-# Stencil Components Demo with Telemetry - Demo
+# Stencil Components with Telemetry - Demo
 
 This project implements a demo of stencil components with built-in telemetry capabilities. It demonstrates how to effectively collect user behavior data and business metrics while maintaining high performance and scalability.
 
