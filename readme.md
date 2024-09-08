@@ -1,37 +1,46 @@
 # Stencil Components Demo with Enhanced Telemetry - Demo
 
-This project demonstrates a high-performance, scalable implementation of an address form and user profile component with advanced telemetry capabilities. Built using Stencil, it showcases best practices for collecting user behavior data and business metrics while maintaining high performance and scalability.
+This project implements a demo of stencil components with built-in telemetry capabilities. It demonstrates how to effectively collect user behavior data and business metrics while maintaining high performance and scalability.
 
 ## Features
 
-- Reusable address form web component
-- User profile component demonstrating advanced telemetry integration
+- Trade Order Entry component for stock trading
+- Address Form component for user information collection
+- User Profile component for account management
 - Enhanced telemetry system with performance optimizations
 - Non-intrusive data collection using a global event bus
 - Comprehensive component lifecycle tracking
-- Business metric tracking (e.g., form completion time)
+- Responsive design for various screen sizes
 
 ## Project Structure
 
 ```
-stencil-form-telemetry/
+financial-services-dashboard/
 ├── src/
 │   ├── components/
 │   │   ├── app-root/
 │   │   │   ├── app-root.tsx
 │   │   │   └── app-root.css
+│   │   ├── trade-order-entry/
+│   │   │   ├── trade-order-entry.tsx
+│   │   │   └── trade-order-entry.css
 │   │   ├── address-form/
 │   │   │   ├── address-form.tsx
 │   │   │   └── address-form.css
-│   │   └── user-profile/
-│   │       ├── user-profile.tsx
-│   │       └── user-profile.css
+│   │   ├── user-profile/
+│   │   │   ├── user-profile.tsx
+│   │   │   └── user-profile.css
+│   │   ├── custom-dropdown/
+│   │   │   ├── custom-dropdown.tsx
+│   │   │   └── custom-dropdown.css
+│   │   └── custom-input/
+│   │       ├── custom-input.tsx
+│   │       └── custom-input.css
 │   ├── utils/
 │   │   ├── telemetry-service.ts
 │   │   ├── telemetry-batcher.ts
-│   │   └── telemetry-types.ts
-│   ├── global/
-│   │   └── app.css
+│   │   ├── telemetry-types.ts
+│   │   └── mock-user-service.ts
 │   ├── index.html
 │   └── index.ts
 ├── stencil.config.ts
@@ -43,20 +52,20 @@ stencil-form-telemetry/
 
 ## Telemetry Enhancements
 
-1. **Global Event Bus**: Centralized telemetry processing using a custom event-based system.
-2. **Event Batching**: Groups multiple telemetry events into batches to reduce network requests.
-3. **Data Compression**: Uses Pako library for efficient data compression before sending.
-4. **Intelligent Sampling**: Implements configurable sampling rates for different event types.
-5. **Non-Blocking Operations**: Utilizes asynchronous processing to maintain UI responsiveness.
-6. **Component Lifecycle Tracking**: Monitors component mount, render, visibility, and unmount events.
-7. **Business Metric Tracking**: Tracks important business events like form completion time.
+1. Global Event Bus: Centralized telemetry processing using a custom event-based system.
+2. Event Batching: Groups multiple telemetry events into batches to reduce network requests.
+3. Data Compression: Uses Pako library for efficient data compression before sending.
+4. Intelligent Sampling: Implements configurable sampling rates for different event types.
+5. Non-Blocking Operations: Utilizes asynchronous processing to maintain UI responsiveness.
+6. Component Lifecycle Tracking: Monitors component mount, render, visibility, and unmount events.
+7. Business Metric Tracking: Tracks important business events like trade order completion time and frequently traded symbols.
 
 ## Getting Started
 
 1. Clone the repository:
    ```
-   git clone https://github.com/jimbono/stencil-form-telemetry.git
-   cd stencil-form-telemetry
+   git clone https://github.com/your-username/financial-services-dashboard.git
+   cd financial-services-dashboard
    ```
 
 2. Install dependencies:
@@ -76,14 +85,15 @@ stencil-form-telemetry/
 
 ## Usage
 
-The address form and user profile components with built-in telemetry can be used in your HTML as follows:
+The dashboard components can be used in your HTML as follows:
 
 ```html
+<trade-order-entry></trade-order-entry>
 <address-form></address-form>
 <user-profile user-id="12345" userService={userServiceInstance}></user-profile>
 ```
 
-Telemetry events are automatically collected and processed.
+Telemetry events are automatically collected and processed for all components.
 
 ## Customization
 
@@ -92,23 +102,9 @@ Telemetry events are automatically collected and processed.
 - Add or modify tracked events in `src/utils/telemetry-types.ts`
 - Extend business metric tracking by adding new event types and implementing them in relevant components
 
-## Performance Considerations
-
-- Telemetry events are batched and compressed to minimize network impact
-- Sampling reduces data volume while maintaining insights
-- Asynchronous processing ensures smooth user experience
-- Visibility tracking uses IntersectionObserver for efficiency
-- Form completion time tracking adds minimal overhead to form submission process
-
-## Business Insights
-
-- Track form completion times to understand user behavior and form usability
-- Analyze component visibility and render times for performance optimization
-- Monitor user interactions and error rates for improving user experience
-
 ## Contributing
 
-This code was written using a fun session with Claude AI intended to show a demo of how telemetry can be implemented when building Stencil components. This code is purely for educational purposes and hence no contributions are expected.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 

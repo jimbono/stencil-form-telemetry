@@ -8,37 +8,45 @@
 4. [Telemetry Implementation Details](#telemetry-implementation-details)
 5. [Business Events](#business-events)
 6. [Performance Optimizations](#performance-optimizations)
-7. [Extensibility Features](#extensibility-features)
-8. [Testing](#testing)
-9. [Deployment Considerations](#deployment-considerations)
-10. [Future Enhancements](#future-enhancements)
+7. [Styling and Responsive Design](#styling-and-responsive-design)
+8. [Extensibility Features](#extensibility-features)
+9. [Testing](#testing)
+10. [Deployment Considerations](#deployment-considerations)
+11. [Future Enhancements](#future-enhancements)
 
 ## Overview
 
-This project implements an address form and user profile component with advanced telemetry capabilities using Stencil. It demonstrates how to effectively collect user behavior data and business metrics while maintaining high performance and scalability, with a focus on comprehensive component lifecycle tracking and extensibility.
+This project implements a comprehensive financial services dashboard with advanced telemetry capabilities using Stencil. It demonstrates how to effectively collect user behavior data and business metrics while maintaining high performance and scalability, with a focus on component lifecycle tracking and extensibility.
 
 ## Project Structure
 
 ```
-address-form-telemetry/
+financial-services-dashboard/
 ├── src/
 │   ├── components/
 │   │   ├── app-root/
 │   │   │   ├── app-root.tsx
 │   │   │   └── app-root.css
+│   │   ├── trade-order-entry/
+│   │   │   ├── trade-order-entry.tsx
+│   │   │   └── trade-order-entry.css
 │   │   ├── address-form/
 │   │   │   ├── address-form.tsx
 │   │   │   └── address-form.css
-│   │   └── user-profile/
-│   │       ├── user-profile.tsx
-│   │       └── user-profile.css
+│   │   ├── user-profile/
+│   │   │   ├── user-profile.tsx
+│   │   │   └── user-profile.css
+│   │   ├── custom-dropdown/
+│   │   │   ├── custom-dropdown.tsx
+│   │   │   └── custom-dropdown.css
+│   │   └── custom-input/
+│   │       ├── custom-input.tsx
+│   │       └── custom-input.css
 │   ├── utils/
 │   │   ├── telemetry-service.ts
 │   │   ├── telemetry-batcher.ts
 │   │   ├── telemetry-types.ts
 │   │   └── mock-user-service.ts
-│   ├── global/
-│   │   └── app.css
 │   ├── index.html
 │   └── index.ts
 ├── stencil.config.ts
@@ -50,13 +58,16 @@ address-form-telemetry/
 
 ## Key Components
 
-1. **Address Form Component** (`address-form.tsx`): Renders the address form, collects user interactions, and tracks form completion time.
-2. **User Profile Component** (`user-profile.tsx`): Displays user information, allows editing of user data, and demonstrates advanced telemetry integration.
-3. **App Root Component** (`app-root.tsx`): Provides the main structure of the application and integrates other components.
-4. **Telemetry Service** (`telemetry-service.ts`): Manages telemetry event processing and sampling.
-5. **Telemetry Batcher** (`telemetry-batcher.ts`): Handles batching and sending of telemetry events.
-6. **Telemetry Types** (`telemetry-types.ts`): Defines structures and types for telemetry events and user data.
-7. **Mock User Service** (`mock-user-service.ts`): Provides a mock implementation of the UserService interface for testing and development purposes.
+1. **Trade Order Entry Component** (`trade-order-entry.tsx`): Renders the trade order form, collects user interactions, and tracks order completion time and frequently traded symbols.
+2. **Address Form Component** (`address-form.tsx`): Collects user address information with telemetry tracking.
+3. **User Profile Component** (`user-profile.tsx`): Displays and allows editing of user information, demonstrating advanced telemetry integration.
+4. **Custom Dropdown Component** (`custom-dropdown.tsx`): Reusable dropdown component used across the dashboard.
+5. **Custom Input Component** (`custom-input.tsx`): Reusable input component used across the dashboard.
+6. **App Root Component** (`app-root.tsx`): Provides the main structure of the application and integrates other components.
+7. **Telemetry Service** (`telemetry-service.ts`): Manages telemetry event processing and sampling.
+8. **Telemetry Batcher** (`telemetry-batcher.ts`): Handles batching and sending of telemetry events.
+9. **Telemetry Types** (`telemetry-types.ts`): Defines structures and types for telemetry events and user data.
+10. **Mock User Service** (`mock-user-service.ts`): Provides a mock implementation of the UserService interface for testing and development purposes.
 
 ## Telemetry Implementation Details
 
@@ -74,8 +85,10 @@ export enum TelemetryEventType {
   PerformanceMetric = 'performanceMetric',
   ErrorOccurred = 'errorOccurred',
   FormCompletionTime = 'formCompletionTime',
-  ProfileEditStarted = 'profileEditStarted',
-  ProfileUpdated = 'profileUpdated'
+  TradeOrderStarted = 'tradeOrderStarted',
+  TradeOrderCompleted = 'tradeOrderCompleted',
+  SymbolEntered = 'symbolEntered',
+  FrequentSymbolsTracked = 'frequentSymbolsTracked'
 }
 ```
 
@@ -93,8 +106,8 @@ private samplingRates: { [key: string]: number } = {
   [TelemetryEventType.PerformanceMetric]: 1,
   [TelemetryEventType.ErrorOccurred]: 1,
   [TelemetryEventType.FormCompletionTime]: 1,
-  [TelemetryEventType.ProfileEditStarted]: 1,
-  [TelemetryEventType.ProfileUpdated]: 1,
+  [TelemetryEventType.TradeOrderCompleted]: 1,
+  [TelemetryEventType.SymbolEntered]: 0.5,
   'default': 0.5
 };
 ```
@@ -109,22 +122,10 @@ private samplingRates: { [key: string]: number } = {
 
 ## Business Events
 
-### Form Completion Time
-
-We track the time it takes for a user to complete the address form submission. This is implemented in the `AddressForm` component.
-
-### User Profile Interactions
-
-We track various interactions with the User Profile component:
-
-1. **Edit Mode Entered**: Tracked when a user starts editing their profile.
-2. **Profile Updated**: Tracked when a user successfully saves their updated profile information.
-3. **Field Edited**: Tracked when a user edits a specific field in their profile.
-
-These events provide insights into:
-- How frequently users update their profiles
-- Which fields are most commonly updated
-- The success rate of profile update attempts
+1. **Trade Order Completion Time**: Tracks the time taken to complete a trade order.
+2. **Frequently Traded Symbols**: Monitors and reports symbols that are frequently traded.
+3. **Form Completion Time**: Measures the time taken to complete various forms (Address, User Profile).
+4. **User Profile Updates**: Tracks when and how often users update their profile information.
 
 ## Performance Optimizations
 
@@ -134,37 +135,32 @@ These events provide insights into:
 4. **Asynchronous Processing**: Uses `CustomEvents` for non-blocking operations.
 5. **Efficient Visibility Tracking**: Uses IntersectionObserver for performant visibility detection.
 
+## Styling and Responsive Design
+
+- Consistent styling across all components using CSS files for each component.
+- Responsive grid layout in the app-root component for organizing main components.
+- Media queries for adapting to different screen sizes.
+- Use of CSS variables for easy theming and maintenance.
+
 ## Extensibility Features
 
 1. **Dynamic Sampling Rates**: The `TelemetryService` allows dynamic adjustment of sampling rates.
 2. **Extended Event Types**: Includes a wide range of event types for comprehensive tracking.
-3. **Dependency Injection**: The `UserProfile` component demonstrates dependency injection with `UserService`.
-4. **Global Styles**: Uses global styles for consistent styling across components.
-5. **Business Metric Tracking**: Easily extendable to track additional business-specific metrics.
-6. **Interactive User Profile**: The UserProfile component supports editing, demonstrating how to track more complex user interactions.
-7. **Mock Services**: Includes a MockUserService for easy testing and development.
+3. **Reusable Components**: Custom input and dropdown components for consistency and easy extension.
+4. **Mock Services**: Includes a MockUserService for easy testing and development.
 
 ## Testing
 
-To implement unit tests for the telemetry system:
+Implement unit tests for:
+1. TelemetryService for correct event emission, sampling, and rate adjustment
+2. TelemetryBatcher for correct batching, compression, and retry logic
+3. Individual components (TradeOrderEntry, AddressForm, UserProfile) for correct rendering and event emissions
+4. Custom input and dropdown components
+5. MockUserService
 
-1. Test `TelemetryService` for correct event emission, sampling, and rate adjustment
-2. Test `TelemetryBatcher` for correct batching, compression, and retry logic
-3. Use Stencil's testing utilities to verify component-level telemetry in all components
-4. Test visibility tracking using mock IntersectionObserver implementations
-5. For `AddressForm` component:
-   - Test form completion time calculation
-   - Verify correct emission of FormCompletionTime events
-   - Test edge cases like rapid form submissions
-6. For `UserProfile` component:
-   - Test edit mode entry and exit
-   - Verify correct emission of ProfileEditStarted and ProfileUpdated events
-   - Test individual field edits and corresponding telemetry events
-   - Test error handling during profile updates
-   - Verify that the component correctly updates its state after a successful profile update
-7. For `MockUserService`:
-   - Test getUserData method for both existing and non-existing users
-   - Test updateUserData method for successful updates and error cases
+Implement integration tests for:
+1. Interaction between components and the telemetry system
+2. End-to-end user flows (e.g., completing a trade order, updating user profile)
 
 ## Deployment Considerations
 
@@ -175,27 +171,21 @@ To implement unit tests for the telemetry system:
 5. Implement data retention and purging policies in compliance with data protection regulations
 6. Consider using a time-series database for efficient storage and querying of telemetry data
 7. Ensure the analytics backend can process and analyze all types of events effectively
-8. Implement proper security measures for handling user data in the UserProfile component
+8. Implement proper security measures for handling sensitive user data
 
 ## Future Enhancements
 
-1. Implement a real-time analytics dashboard for visualizing telemetry data
+1. Implement real-time analytics dashboard for visualizing telemetry data
 2. Add support for A/B testing by extending the telemetry system
 3. Implement user session tracking for more contextualized telemetry data
 4. Develop a system for dynamically updating sampling rates based on current system load or data importance
 5. Integrate machine learning models for predictive analytics based on collected telemetry data
 6. Implement a plugin system to allow easy addition of custom telemetry processors
 7. Create a configuration UI for adjusting telemetry settings in real-time
-8. Implement real backend integration for the UserService
-9. Add more interactive features to the UserProfile component
-10. Extend telemetry to track user behavior across multiple components in a micro frontend architecture
-11. Implement advanced analytics on form completion times to identify usability issues or areas for improvement in the form design
-12. Add more granular timing metrics, such as time spent on individual fields or sections of the form
-13. Implement heat mapping of user interactions within forms to identify areas of focus or confusion
-14. Develop a system for correlating form completion times with other business metrics (e.g., conversion rates)
-15. Create a mechanism for dynamically adjusting form fields based on telemetry data to optimize user experience
-16. Implement profile picture upload functionality in the UserProfile component
-17. Add form validation to the profile editing feature
-18. Implement undo/redo functionality for profile edits with corresponding telemetry tracking
-19. Add more sophisticated error handling and user feedback in the UserProfile component
-20. Implement data synchronization mechanisms for offline support in the UserProfile component
+8. Implement real backend integration for the Trade Order Entry and User Profile components
+9. Add more interactive features to the dashboard components
+10. Implement heat mapping of user interactions within forms to identify areas of focus or confusion
+11. Develop a system for correlating business metrics (e.g., trade completion times with market volatility)
+12. Create a mechanism for dynamically adjusting UI based on telemetry data to optimize user experience
+13. Implement multi-factor authentication for enhanced security
+14. Add support for multiple languages and localization
