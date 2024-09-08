@@ -5,21 +5,13 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { TelemetryEvent } from "./utils/telemetry";
 export namespace Components {
     interface AddressForm {
     }
     interface AppRoot {
     }
-    interface TelemetryWrapper {
-        "componentId": string;
-    }
     interface TestComponent {
     }
-}
-export interface AddressFormCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAddressFormElement;
 }
 declare global {
     interface HTMLAddressFormElement extends Components.AddressForm, HTMLStencilElement {
@@ -34,12 +26,6 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
-    interface HTMLTelemetryWrapperElement extends Components.TelemetryWrapper, HTMLStencilElement {
-    }
-    var HTMLTelemetryWrapperElement: {
-        prototype: HTMLTelemetryWrapperElement;
-        new (): HTMLTelemetryWrapperElement;
-    };
     interface HTMLTestComponentElement extends Components.TestComponent, HTMLStencilElement {
     }
     var HTMLTestComponentElement: {
@@ -49,25 +35,19 @@ declare global {
     interface HTMLElementTagNameMap {
         "address-form": HTMLAddressFormElement;
         "app-root": HTMLAppRootElement;
-        "telemetry-wrapper": HTMLTelemetryWrapperElement;
         "test-component": HTMLTestComponentElement;
     }
 }
 declare namespace LocalJSX {
     interface AddressForm {
-        "onTelemetryEvent"?: (event: AddressFormCustomEvent<TelemetryEvent>) => void;
     }
     interface AppRoot {
-    }
-    interface TelemetryWrapper {
-        "componentId"?: string;
     }
     interface TestComponent {
     }
     interface IntrinsicElements {
         "address-form": AddressForm;
         "app-root": AppRoot;
-        "telemetry-wrapper": TelemetryWrapper;
         "test-component": TestComponent;
     }
 }
@@ -77,7 +57,6 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "address-form": LocalJSX.AddressForm & JSXBase.HTMLAttributes<HTMLAddressFormElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
-            "telemetry-wrapper": LocalJSX.TelemetryWrapper & JSXBase.HTMLAttributes<HTMLTelemetryWrapperElement>;
             "test-component": LocalJSX.TestComponent & JSXBase.HTMLAttributes<HTMLTestComponentElement>;
         }
     }

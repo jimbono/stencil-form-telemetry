@@ -1,4 +1,4 @@
-import { TelemetryEvent } from './telemetry';
+import { TelemetryEvent } from './telemetry-types';
 import pako from 'pako';
 
 export class TelemetryBatcher {

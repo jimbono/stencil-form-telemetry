@@ -1,4 +1,5 @@
 import { Component, h } from '@stencil/core';
+import { telemetry } from '../../utils/telemetry-service';
 
 @Component({
   tag: 'app-root',
@@ -6,6 +7,14 @@ import { Component, h } from '@stencil/core';
   shadow: true,
 })
 export class AppRoot {
+  componentDidLoad() {
+    telemetry.emit('componentMount', { name: 'AppRoot' });
+  }
+
+  disconnectedCallback() {
+    telemetry.emit('componentUnmount', { name: 'AppRoot' });
+  }
+
   render() {
     return (
       <div>
@@ -13,9 +22,7 @@ export class AppRoot {
           <h1>Address Form with Telemetry</h1>
         </header>
         <main>
-          <telemetry-wrapper component-id="address-form">
-            <address-form></address-form>
-          </telemetry-wrapper>
+          <address-form></address-form>
         </main>
       </div>
     );

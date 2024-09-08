@@ -16,9 +16,6 @@ export const config: Config = {
     {
       type: 'www',
       serviceWorker: null, // disable service workers
-      copy: [
-        { src: 'utils/telemetry-worker.ts', dest: 'assets/telemetry-worker.js' }
-      ]
     },
   ],
 };

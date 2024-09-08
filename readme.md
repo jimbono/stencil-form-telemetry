@@ -1,31 +1,29 @@
-# Stencil Telemetry Project
+# Address Form with Enhanced Telemetry
 
-This project demonstrates a non-intrusive, event-agnostic telemetry system implemented using Stencil web components. It showcases how to collect user behavior metrics and component performance data without tightly coupling the telemetry logic to individual components.
+This project demonstrates a high-performance, scalable implementation of an address form component with advanced telemetry capabilities. Built using Stencil, it showcases best practices for collecting user behavior data while minimizing performance impact.
 
 ## Features
 
-- Event-agnostic telemetry wrapper component
-- Generic telemetry event emission from components
-- Automatic tracking of component render times and visibility
-- Page load metrics collection
-- Sample form component with telemetry integration
+- Reusable address form web component
+- Enhanced telemetry system with performance optimizations
+- Non-intrusive data collection using a global event bus
 
 ## Project Structure
 
 ```
-your-project-name/
+address-form-telemetry/
 ├── src/
 │   ├── components/
 │   │   ├── app-root/
 │   │   │   ├── app-root.tsx
 │   │   │   └── app-root.css
-│   │   ├── clean-form/
-│   │   │   ├── clean-form.tsx
-│   │   │   └── clean-form.css
-│   │   └── telemetry-wrapper/
-│   │       └── telemetry-wrapper.tsx
+│   │   └── address-form/
+│   │       ├── address-form.tsx
+│   │       └── address-form.css
 │   ├── utils/
-│   │   └── telemetry.ts
+│   │   ├── telemetry-service.ts
+│   │   ├── telemetry-batcher.ts
+│   │   └── telemetry-types.ts
 │   ├── index.html
 │   └── index.ts
 ├── stencil.config.ts
@@ -34,12 +32,20 @@ your-project-name/
 └── README.md
 ```
 
-## Setup
+## Telemetry Enhancements
+
+1. **Global Event Bus**: Centralized telemetry processing using a custom event-based system.
+2. **Event Batching**: Groups multiple telemetry events into batches to reduce network requests.
+3. **Data Compression**: Uses Pako library for efficient data compression before sending.
+4. **Intelligent Sampling**: Implements configurable sampling rates for different event types.
+5. **Non-Blocking Operations**: Utilizes asynchronous processing to maintain UI responsiveness.
+
+## Getting Started
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/your-project-name.git
-   cd your-project-name
+   git clone https://github.com/your-username/address-form-telemetry.git
+   cd address-form-telemetry
    ```
 
 2. Install dependencies:
@@ -52,65 +58,32 @@ your-project-name/
    npm start
    ```
 
-4. To build for production:
+4. Build for production:
    ```
    npm run build
    ```
 
 ## Usage
 
-### Telemetry Wrapper
-
-Wrap any component you want to track with the `<telemetry-wrapper>` component:
+The address form component with built-in telemetry can be used in your HTML as follows:
 
 ```html
-<telemetry-wrapper component-id="unique-id">
-  <your-component></your-component>
-</telemetry-wrapper>
+<address-form></address-form>
 ```
 
-### Emitting Telemetry Events
-
-In your component, emit telemetry events using the `telemetryEvent` custom event:
-
-```typescript
-@Event() telemetryEvent: EventEmitter<any>;
-
-// ...
-
-this.telemetryEvent.emit({
-  type: 'customEventType',
-  // ... other relevant data
-});
-```
-
-### Clean Form Component
-
-The `<clean-form>` component demonstrates how to integrate telemetry into a form:
-
-```html
-<telemetry-wrapper component-id="address-form">
-  <clean-form id="address-form" submit-button-text="Submit Address"></clean-form>
-</telemetry-wrapper>
-```
-
-## Telemetry Data
-
-The telemetry system collects the following data:
-
-- Component render times
-- Component visibility
-- Custom interaction events
-- Form submissions and errors
-- Page load metrics
-
-Telemetry data is logged to the console in this demo. In a production environment, you would configure the `sendMetrics` function in `telemetry.ts` to send data to your analytics service.
+Telemetry events are automatically collected and processed.
 
 ## Customization
 
-- Modify the `Telemetry` class in `src/utils/telemetry.ts` to change how metrics are collected or sent.
-- Add new event types by emitting different payloads in your components.
-- Extend the `TelemetryWrapper` component to add more automatic tracking features.
+- Adjust sampling rates in `src/utils/telemetry-service.ts`
+- Modify batch size and flush interval in `src/utils/telemetry-batcher.ts`
+- Add or modify tracked events in `src/components/address-form/address-form.tsx`
+
+## Performance Considerations
+
+- Telemetry events are batched and compressed to minimize network impact
+- Sampling reduces data volume while maintaining insights
+- Asynchronous processing ensures smooth user experience
 
 ## Contributing
 

@@ -1,5 +1,5 @@
-import { Component, h, State, Event, EventEmitter } from '@stencil/core';
-import { TelemetryEvent } from '../../utils/telemetry';
+import { Component, h, State } from '@stencil/core';
+import { telemetry } from '../../utils/telemetry-service';
 
 @Component({
   tag: 'address-form',
@@ -8,16 +8,15 @@ import { TelemetryEvent } from '../../utils/telemetry';
 })
 export class AddressForm {
   @State() formData: { [key: string]: string } = {};
-  @Event() telemetryEvent: EventEmitter<TelemetryEvent>;
 
   private formFields: string[] = ['name', 'street', 'city', 'state', 'zipCode'];
 
-  private emitTelemetry(eventType: string, details: any) {
-    this.telemetryEvent.emit({
-      type: eventType,
-      timestamp: new Date().toISOString(),
-      details
-    });
+  componentDidLoad() {
+    telemetry.emit('componentMount', { name: 'AddressForm' });
+  }
+
+  disconnectedCallback() {
+    telemetry.emit('componentUnmount', { name: 'AddressForm' });
   }
 
   handleInput(event: Event, field: string) {
@@ -27,12 +26,12 @@ export class AddressForm {
 
   handleBlur(event: Event, field: string) {
     const input = event.target as HTMLInputElement;
-    this.emitTelemetry('fieldBlur', { field, value: input.value });
+    telemetry.emit('fieldBlur', { field, value: input.value, component: 'AddressForm' });
   }
 
   handleSubmit(event: Event) {
     event.preventDefault();
-    this.emitTelemetry('formSubmit', this.formData);
+    telemetry.emit('formSubmit', { formData: this.formData, component: 'AddressForm' });
     console.log('Form submitted:', this.formData);
   }
 

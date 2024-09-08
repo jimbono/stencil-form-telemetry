@@ -5,13 +5,6 @@
 <!-- Auto Generated Below -->
 
 
-## Events
-
-| Event            | Description | Type                          |
-| ---------------- | ----------- | ----------------------------- |
-| `telemetryEvent` |             | `CustomEvent<TelemetryEvent>` |
-
-
 ## Dependencies
 
 ### Used by
