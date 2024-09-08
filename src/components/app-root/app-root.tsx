@@ -62,6 +62,7 @@ export class AppRoot {
           <h1>Address Form with Telemetry</h1>
         </header>
         <main>
+          <trade-order-entry></trade-order-entry>
           <address-form></address-form>
           <user-profile user-id="12345" userService={this.userService}></user-profile>
         </main>

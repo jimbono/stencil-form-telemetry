@@ -133,20 +133,41 @@ export class UserProfile {
 
     return (
       <div class="user-profile">
+        <h2>User Profile</h2>
         <div class="profile-image"></div>
-        <h2>{this.userData.name}</h2>
         <div class="user-info">
           {this.isEditing ? (
             <div>
-              <input type="text" value={this.userData.name} onInput={(e) => this.handleInputChange(e, 'name')} />
-              <input type="email" value={this.userData.email} onInput={(e) => this.handleInputChange(e, 'email')} />
-              <input type="text" value={this.userData.location} onInput={(e) => this.handleInputChange(e, 'location')} />
+              <div class="form-row">
+                <custom-input
+                  label="Name"
+                  name="name"
+                  type="text"
+                  value={this.userData.name}
+                  onValueChanged={(e) => this.handleInputChange(e, 'name')}
+                ></custom-input>
+                <custom-input
+                  label="Email"
+                  name="email"
+                  type="email"
+                  value={this.userData.email}
+                  onValueChanged={(e) => this.handleInputChange(e, 'email')}
+                ></custom-input>
+              </div>
+              <custom-input
+                label="Location"
+                name="location"
+                type="text"
+                value={this.userData.location}
+                onValueChanged={(e) => this.handleInputChange(e, 'location')}
+              ></custom-input>
               <button onClick={this.handleSave}>Save</button>
             </div>
           ) : (
             <div>
-              <p>Email: {this.userData.email}</p>
-              <p>Location: {this.userData.location}</p>
+              <p><strong>Name:</strong> {this.userData.name}</p>
+              <p><strong>Email:</strong> {this.userData.email}</p>
+              <p><strong>Location:</strong> {this.userData.location}</p>
               <button onClick={this.handleEdit}>Edit Profile</button>
             </div>
           )}

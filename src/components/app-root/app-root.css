@@ -1,19 +1,40 @@
-header {
-    background: #5851ff;
+:host {
+    display: block;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  header {
+    background: #4a90e2;
     color: white;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
   }
   
   h1 {
-    font-size: 1.4rem;
-    font-weight: 500;
-    color: #fff;
-    padding: 0 12px;
+    margin: 0;
+    font-size: 24px;
   }
   
   main {
-    padding: 20px;
+    display: grid;
+    gap: 20px;
+  }
+  
+  @media (min-width: 768px) {
+    main {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    main {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }

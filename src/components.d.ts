@@ -11,12 +11,33 @@ export namespace Components {
     }
     interface AppRoot {
     }
+    interface CustomDropdown {
+        "label": string;
+        "name": string;
+        "options": string[];
+    }
+    interface CustomInput {
+        "label": string;
+        "name": string;
+        "type": string;
+        "value": string;
+    }
     interface TestComponent {
+    }
+    interface TradeOrderEntry {
     }
     interface UserProfile {
         "userId": string;
         "userService": UserService;
     }
+}
+export interface CustomDropdownCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCustomDropdownElement;
+}
+export interface CustomInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLCustomInputElement;
 }
 declare global {
     interface HTMLAddressFormElement extends Components.AddressForm, HTMLStencilElement {
@@ -31,11 +52,29 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLCustomDropdownElement extends Components.CustomDropdown, HTMLStencilElement {
+    }
+    var HTMLCustomDropdownElement: {
+        prototype: HTMLCustomDropdownElement;
+        new (): HTMLCustomDropdownElement;
+    };
+    interface HTMLCustomInputElement extends Components.CustomInput, HTMLStencilElement {
+    }
+    var HTMLCustomInputElement: {
+        prototype: HTMLCustomInputElement;
+        new (): HTMLCustomInputElement;
+    };
     interface HTMLTestComponentElement extends Components.TestComponent, HTMLStencilElement {
     }
     var HTMLTestComponentElement: {
         prototype: HTMLTestComponentElement;
         new (): HTMLTestComponentElement;
+    };
+    interface HTMLTradeOrderEntryElement extends Components.TradeOrderEntry, HTMLStencilElement {
+    }
+    var HTMLTradeOrderEntryElement: {
+        prototype: HTMLTradeOrderEntryElement;
+        new (): HTMLTradeOrderEntryElement;
     };
     interface HTMLUserProfileElement extends Components.UserProfile, HTMLStencilElement {
     }
@@ -46,7 +85,10 @@ declare global {
     interface HTMLElementTagNameMap {
         "address-form": HTMLAddressFormElement;
         "app-root": HTMLAppRootElement;
+        "custom-dropdown": HTMLCustomDropdownElement;
+        "custom-input": HTMLCustomInputElement;
         "test-component": HTMLTestComponentElement;
+        "trade-order-entry": HTMLTradeOrderEntryElement;
         "user-profile": HTMLUserProfileElement;
     }
 }
@@ -55,7 +97,22 @@ declare namespace LocalJSX {
     }
     interface AppRoot {
     }
+    interface CustomDropdown {
+        "label"?: string;
+        "name"?: string;
+        "onValueChanged"?: (event: CustomDropdownCustomEvent<{ name: string, value: string }>) => void;
+        "options"?: string[];
+    }
+    interface CustomInput {
+        "label"?: string;
+        "name"?: string;
+        "onValueChanged"?: (event: CustomInputCustomEvent<{ name: string, value: string }>) => void;
+        "type"?: string;
+        "value"?: string;
+    }
     interface TestComponent {
+    }
+    interface TradeOrderEntry {
     }
     interface UserProfile {
         "userId"?: string;
@@ -64,7 +121,10 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "address-form": AddressForm;
         "app-root": AppRoot;
+        "custom-dropdown": CustomDropdown;
+        "custom-input": CustomInput;
         "test-component": TestComponent;
+        "trade-order-entry": TradeOrderEntry;
         "user-profile": UserProfile;
     }
 }
@@ -74,7 +134,10 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "address-form": LocalJSX.AddressForm & JSXBase.HTMLAttributes<HTMLAddressFormElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "custom-dropdown": LocalJSX.CustomDropdown & JSXBase.HTMLAttributes<HTMLCustomDropdownElement>;
+            "custom-input": LocalJSX.CustomInput & JSXBase.HTMLAttributes<HTMLCustomInputElement>;
             "test-component": LocalJSX.TestComponent & JSXBase.HTMLAttributes<HTMLTestComponentElement>;
+            "trade-order-entry": LocalJSX.TradeOrderEntry & JSXBase.HTMLAttributes<HTMLTradeOrderEntryElement>;
             "user-profile": LocalJSX.UserProfile & JSXBase.HTMLAttributes<HTMLUserProfileElement>;
         }
     }

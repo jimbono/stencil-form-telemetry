@@ -14,11 +14,15 @@ export interface TelemetryEvent {
     UserInteraction = 'userInteraction',
     PerformanceMetric = 'performanceMetric',
     ErrorOccurred = 'errorOccurred',
-    FormCompletionTime = 'formCompletionTime',  // New event type
+    FormCompletionTime = 'formCompletionTime',
     ProfileEditStarted = 'profileEditStarted',
-    ProfileUpdated = 'profileUpdated'
+    ProfileUpdated = 'profileUpdated',
+    TradeOrderStarted = 'tradeOrderStarted',
+    TradeOrderCompleted = 'tradeOrderCompleted',
+    SymbolEntered = 'symbolEntered',
+    FrequentSymbolsTracked = 'frequentSymbolsTracked'
   }
-  
+
   export interface PerformanceMetricData {
     metricName: string;
     value: number;
@@ -47,4 +51,18 @@ export interface TelemetryEvent {
     formId: string;
     completionTime: number;
     fieldCount: number;
+  }
+
+  export interface TradeOrderData {
+    action: string;
+    symbol: string;
+    quantity: number;
+    orderType: string;
+    limitPrice?: number;
+    timeInForce: string;
+  }
+  
+  export interface FrequentSymbolsData {
+    symbols: string[];
+    counts: { [symbol: string]: number };
   }

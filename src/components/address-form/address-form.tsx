@@ -1,6 +1,6 @@
 import { Component, h, State, Element } from '@stencil/core';
 import { telemetry } from '../../utils/telemetry-service';
-import { TelemetryEventType, FormCompletionTimeData } from '../../utils/telemetry-types';
+import { TelemetryEventType } from '../../utils/telemetry-types';
 
 @Component({
   tag: 'address-form',
@@ -16,8 +16,8 @@ export class AddressForm {
   private intersectionObserver: IntersectionObserver;
 
   componentWillLoad() {
-    telemetry.emit(TelemetryEventType.ComponentMount, { name: 'AddressForm' });
     this.formStartTime = performance.now();
+    telemetry.emit(TelemetryEventType.ComponentMount, { name: 'AddressForm' });
   }
 
   componentDidLoad() {
@@ -29,7 +29,6 @@ export class AddressForm {
   }
 
   disconnectedCallback() {
-    telemetry.emit(TelemetryEventType.ComponentUnmount, { name: 'AddressForm' });
     if (this.intersectionObserver) {
       this.intersectionObserver.disconnect();
     }
@@ -68,16 +67,12 @@ export class AddressForm {
     event.preventDefault();
     const completionTime = performance.now() - this.formStartTime;
     
-    // Emit form submission event
     telemetry.emit(TelemetryEventType.FormSubmit, this.formData);
-    
-    // Emit form completion time event
-    const formCompletionData: FormCompletionTimeData = {
+    telemetry.emit(TelemetryEventType.FormCompletionTime, {
       formId: 'AddressForm',
       completionTime: completionTime,
       fieldCount: this.formFields.length
-    };
-    telemetry.emit(TelemetryEventType.FormCompletionTime, formCompletionData);
+    });
 
     console.log('Form submitted:', this.formData);
     console.log('Form completion time:', completionTime, 'ms');
@@ -89,19 +84,42 @@ export class AddressForm {
   render() {
     return (
       <form onSubmit={(e) => this.handleSubmit(e)}>
-        {this.formFields.map(field => (
-          <div>
-            <label htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}:</label>
-            <input
-              type="text"
-              id={field}
-              value={this.formData[field] || ''}
-              onInput={(e) => this.handleInput(e, field)}
-              onBlur={(e) => this.handleBlur(e, field)}
-            />
-          </div>
-        ))}
-        <button type="submit">Submit</button>
+        <h2>Address Form</h2>
+        <div class="form-row">
+          <custom-input
+            label="Name"
+            name="name"
+            type="text"
+            onValueChanged={(e) => this.handleInput(e, 'name')}
+          ></custom-input>
+          <custom-input
+            label="Street"
+            name="street"
+            type="text"
+            onValueChanged={(e) => this.handleInput(e, 'street')}
+          ></custom-input>
+        </div>
+        <div class="form-row">
+          <custom-input
+            label="City"
+            name="city"
+            type="text"
+            onValueChanged={(e) => this.handleInput(e, 'city')}
+          ></custom-input>
+          <custom-input
+            label="State"
+            name="state"
+            type="text"
+            onValueChanged={(e) => this.handleInput(e, 'state')}
+          ></custom-input>
+        </div>
+        <custom-input
+          label="Zip Code"
+          name="zipCode"
+          type="text"
+          onValueChanged={(e) => this.handleInput(e, 'zipCode')}
+        ></custom-input>
+        <button type="submit">Submit Address</button>
       </form>
     );
   }
