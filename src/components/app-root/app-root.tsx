@@ -1,19 +1,9 @@
 import { Component, h, Element } from '@stencil/core';
 import { telemetry } from '../../utils/telemetry-service';
-import { UserService, TelemetryEventType } from '../../utils/telemetry-types';
+import { TelemetryEventType } from '../../utils/telemetry-types';
+import { MockUserService } from '../../utils/mock-user-service';
 
-class MockUserService implements UserService {
-  async getUserData(userId: string) {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return {
-      id: userId,
-      name: 'John Doe',
-      email: 'john@example.com',
-      location: 'New York'
-    };
-  }
-}
+
 
 @Component({
   tag: 'app-root',

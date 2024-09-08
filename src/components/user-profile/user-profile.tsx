@@ -11,6 +11,7 @@ export class UserProfile {
   @Prop() userId: string;
   @Prop() userService: UserService;
   @State() userData: UserData = null;
+  @State() isEditing: boolean = false;
   @State() error: string = null;
   @Element() el: HTMLElement;
 
@@ -82,10 +83,41 @@ export class UserProfile {
     }
   }
 
-  private handleInteraction = (action: string) => {
+  private handleEdit = () => {
+    this.isEditing = true;
     telemetry.emit(TelemetryEventType.UserInteraction, { 
       name: 'UserProfile',
-      action: action,
+      action: 'editModeEntered',
+      userId: this.userId
+    });
+  }
+
+  private handleSave = async () => {
+    try {
+      await this.userService.updateUserData(this.userId, this.userData);
+      this.isEditing = false;
+      telemetry.emit(TelemetryEventType.UserInteraction, { 
+        name: 'UserProfile',
+        action: 'profileUpdated',
+        userId: this.userId
+      });
+    } catch (error) {
+      this.error = error.message;
+      telemetry.emit(TelemetryEventType.ErrorOccurred, {
+        message: 'Failed to update user data',
+        componentName: 'UserProfile',
+        stack: error.stack
+      });
+    }
+  }
+
+  private handleInputChange = (event: Event, field: string) => {
+    const input = event.target as HTMLInputElement;
+    this.userData = { ...this.userData, [field]: input.value };
+    telemetry.emit(TelemetryEventType.UserInteraction, { 
+      name: 'UserProfile',
+      action: 'fieldEdited',
+      field: field,
       userId: this.userId
     });
   }
@@ -104,11 +136,20 @@ export class UserProfile {
         <div class="profile-image"></div>
         <h2>{this.userData.name}</h2>
         <div class="user-info">
-          <p>Email: {this.userData.email}</p>
-          <p>Location: {this.userData.location}</p>
-        </div>
-        <div class="interaction-area">
-          <button onClick={() => this.handleInteraction('viewDetails')}>View Details</button>
+          {this.isEditing ? (
+            <div>
+              <input type="text" value={this.userData.name} onInput={(e) => this.handleInputChange(e, 'name')} />
+              <input type="email" value={this.userData.email} onInput={(e) => this.handleInputChange(e, 'email')} />
+              <input type="text" value={this.userData.location} onInput={(e) => this.handleInputChange(e, 'location')} />
+              <button onClick={this.handleSave}>Save</button>
+            </div>
+          ) : (
+            <div>
+              <p>Email: {this.userData.email}</p>
+              <p>Location: {this.userData.location}</p>
+              <button onClick={this.handleEdit}>Edit Profile</button>
+            </div>
+          )}
         </div>
       </div>
     );

@@ -14,7 +14,9 @@ export interface TelemetryEvent {
     UserInteraction = 'userInteraction',
     PerformanceMetric = 'performanceMetric',
     ErrorOccurred = 'errorOccurred',
-    FormCompletionTime = 'formCompletionTime'  // New event type
+    FormCompletionTime = 'formCompletionTime',  // New event type
+    ProfileEditStarted = 'profileEditStarted',
+    ProfileUpdated = 'profileUpdated'
   }
   
   export interface PerformanceMetricData {
@@ -38,6 +40,7 @@ export interface TelemetryEvent {
   
   export interface UserService {
     getUserData(userId: string): Promise<UserData>;
+    updateUserData(userId: string, userData: UserData): Promise<UserData>;
   }
   
   export interface FormCompletionTimeData {

@@ -35,7 +35,8 @@ address-form-telemetry/
 │   ├── utils/
 │   │   ├── telemetry-service.ts
 │   │   ├── telemetry-batcher.ts
-│   │   └── telemetry-types.ts
+│   │   ├── telemetry-types.ts
+│   │   └── mock-user-service.ts
 │   ├── global/
 │   │   └── app.css
 │   ├── index.html
@@ -50,11 +51,12 @@ address-form-telemetry/
 ## Key Components
 
 1. **Address Form Component** (`address-form.tsx`): Renders the address form, collects user interactions, and tracks form completion time.
-2. **User Profile Component** (`user-profile.tsx`): Displays user information and demonstrates advanced telemetry integration.
+2. **User Profile Component** (`user-profile.tsx`): Displays user information, allows editing of user data, and demonstrates advanced telemetry integration.
 3. **App Root Component** (`app-root.tsx`): Provides the main structure of the application and integrates other components.
 4. **Telemetry Service** (`telemetry-service.ts`): Manages telemetry event processing and sampling.
 5. **Telemetry Batcher** (`telemetry-batcher.ts`): Handles batching and sending of telemetry events.
 6. **Telemetry Types** (`telemetry-types.ts`): Defines structures and types for telemetry events and user data.
+7. **Mock User Service** (`mock-user-service.ts`): Provides a mock implementation of the UserService interface for testing and development purposes.
 
 ## Telemetry Implementation Details
 
@@ -71,7 +73,9 @@ export enum TelemetryEventType {
   UserInteraction = 'userInteraction',
   PerformanceMetric = 'performanceMetric',
   ErrorOccurred = 'errorOccurred',
-  FormCompletionTime = 'formCompletionTime'
+  FormCompletionTime = 'formCompletionTime',
+  ProfileEditStarted = 'profileEditStarted',
+  ProfileUpdated = 'profileUpdated'
 }
 ```
 
@@ -88,7 +92,9 @@ private samplingRates: { [key: string]: number } = {
   [TelemetryEventType.UserInteraction]: 0.2,
   [TelemetryEventType.PerformanceMetric]: 1,
   [TelemetryEventType.ErrorOccurred]: 1,
-  [TelemetryEventType.FormCompletionTime]: 1,  // Always capture form completion time
+  [TelemetryEventType.FormCompletionTime]: 1,
+  [TelemetryEventType.ProfileEditStarted]: 1,
+  [TelemetryEventType.ProfileUpdated]: 1,
   'default': 0.5
 };
 ```
@@ -105,33 +111,20 @@ private samplingRates: { [key: string]: number } = {
 
 ### Form Completion Time
 
-We track the time it takes for a user to complete the address form submission. This is implemented in the `AddressForm` component:
+We track the time it takes for a user to complete the address form submission. This is implemented in the `AddressForm` component.
 
-```typescript
-handleSubmit(event: Event) {
-  event.preventDefault();
-  const completionTime = performance.now() - this.formStartTime;
-  
-  // Emit form submission event
-  telemetry.emit(TelemetryEventType.FormSubmit, this.formData);
-  
-  // Emit form completion time event
-  const formCompletionData: FormCompletionTimeData = {
-    formId: 'AddressForm',
-    completionTime: completionTime,
-    fieldCount: this.formFields.length
-  };
-  telemetry.emit(TelemetryEventType.FormCompletionTime, formCompletionData);
+### User Profile Interactions
 
-  // Reset the form start time for the next submission
-  this.formStartTime = performance.now();
-}
-```
+We track various interactions with the User Profile component:
 
-This event provides insights into:
-- The time taken to complete the form
-- The number of fields in the form
-- Potential correlations between form complexity and completion time
+1. **Edit Mode Entered**: Tracked when a user starts editing their profile.
+2. **Profile Updated**: Tracked when a user successfully saves their updated profile information.
+3. **Field Edited**: Tracked when a user edits a specific field in their profile.
+
+These events provide insights into:
+- How frequently users update their profiles
+- Which fields are most commonly updated
+- The success rate of profile update attempts
 
 ## Performance Optimizations
 
@@ -148,6 +141,8 @@ This event provides insights into:
 3. **Dependency Injection**: The `UserProfile` component demonstrates dependency injection with `UserService`.
 4. **Global Styles**: Uses global styles for consistent styling across components.
 5. **Business Metric Tracking**: Easily extendable to track additional business-specific metrics.
+6. **Interactive User Profile**: The UserProfile component supports editing, demonstrating how to track more complex user interactions.
+7. **Mock Services**: Includes a MockUserService for easy testing and development.
 
 ## Testing
 
@@ -162,11 +157,14 @@ To implement unit tests for the telemetry system:
    - Verify correct emission of FormCompletionTime events
    - Test edge cases like rapid form submissions
 6. For `UserProfile` component:
-   - Create a mock `UserService` implementation for unit tests
-   - Test component lifecycle telemetry events
-   - Test performance metric emission for data fetching
-   - Test error handling and corresponding telemetry events
-   - Test user interaction telemetry events
+   - Test edit mode entry and exit
+   - Verify correct emission of ProfileEditStarted and ProfileUpdated events
+   - Test individual field edits and corresponding telemetry events
+   - Test error handling during profile updates
+   - Verify that the component correctly updates its state after a successful profile update
+7. For `MockUserService`:
+   - Test getUserData method for both existing and non-existing users
+   - Test updateUserData method for successful updates and error cases
 
 ## Deployment Considerations
 
@@ -176,7 +174,8 @@ To implement unit tests for the telemetry system:
 4. Set up monitoring for the telemetry system to track performance and reliability
 5. Implement data retention and purging policies in compliance with data protection regulations
 6. Consider using a time-series database for efficient storage and querying of telemetry data
-7. Ensure the analytics backend can process and analyze the new FormCompletionTime events effectively
+7. Ensure the analytics backend can process and analyze all types of events effectively
+8. Implement proper security measures for handling user data in the UserProfile component
 
 ## Future Enhancements
 
@@ -187,7 +186,7 @@ To implement unit tests for the telemetry system:
 5. Integrate machine learning models for predictive analytics based on collected telemetry data
 6. Implement a plugin system to allow easy addition of custom telemetry processors
 7. Create a configuration UI for adjusting telemetry settings in real-time
-8. Implement a real backend for the UserService
+8. Implement real backend integration for the UserService
 9. Add more interactive features to the UserProfile component
 10. Extend telemetry to track user behavior across multiple components in a micro frontend architecture
 11. Implement advanced analytics on form completion times to identify usability issues or areas for improvement in the form design
@@ -195,3 +194,8 @@ To implement unit tests for the telemetry system:
 13. Implement heat mapping of user interactions within forms to identify areas of focus or confusion
 14. Develop a system for correlating form completion times with other business metrics (e.g., conversion rates)
 15. Create a mechanism for dynamically adjusting form fields based on telemetry data to optimize user experience
+16. Implement profile picture upload functionality in the UserProfile component
+17. Add form validation to the profile editing feature
+18. Implement undo/redo functionality for profile edits with corresponding telemetry tracking
+19. Add more sophisticated error handling and user feedback in the UserProfile component
+20. Implement data synchronization mechanisms for offline support in the UserProfile component
