@@ -14,6 +14,8 @@ export class TelemetryBatcher {
 
   addEvent(event: TelemetryEvent) {
     this.buffer.push(event);
+    window.dispatchEvent(new CustomEvent('telemetryEvent', { detail: event }));
+
     if (this.buffer.length >= this.batchSize) {
       this.flush();
     }

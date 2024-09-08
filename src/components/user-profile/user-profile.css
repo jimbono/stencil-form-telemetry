@@ -1,37 +1,37 @@
 :host {
     display: block;
     font-family: 'Arial', sans-serif;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 2rem;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    min-width: 300px;
   }
   
   h2 {
     color: #333;
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2em;
   }
   
   .user-info {
     display: grid;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 15px;
   }
   
   .profile-image {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     background-color: #ddd;
-    margin: 0 auto 1rem;
+    margin: 0 auto 15px;
   }
   
   button {
     width: 100%;
-    padding: 0.75rem;
+    padding: 10px;
     font-size: 1rem;
     font-weight: bold;
     color: #fff;
@@ -46,34 +46,37 @@
     background-color: #3a7bc8;
   }
   
-  button:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.5);
-  }
-  
   .form-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-  
-  @media (max-width: 600px) {
-    :host {
-      padding: 1rem;
-    }
-  
-    .form-row {
-      grid-template-columns: 1fr;
-    }
+    gap: 10px;
   }
   
   .error {
     color: #dc3545;
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 10px;
   }
   
   .loading {
     text-align: center;
     color: #666;
+  }
+  
+  @media (max-width: 400px) {
+    :host {
+      padding: 10px;
+    }
+  
+    h2 {
+      font-size: 1em;
+    }
+  
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  
+    .profile-image {
+      width: 60px;
+      height: 60px;
+    }
   }

@@ -22,6 +22,8 @@ export namespace Components {
         "type": string;
         "value": string;
     }
+    interface EventsTelemetryPanel {
+    }
     interface TestComponent {
     }
     interface TradeOrderEntry {
@@ -64,6 +66,12 @@ declare global {
         prototype: HTMLCustomInputElement;
         new (): HTMLCustomInputElement;
     };
+    interface HTMLEventsTelemetryPanelElement extends Components.EventsTelemetryPanel, HTMLStencilElement {
+    }
+    var HTMLEventsTelemetryPanelElement: {
+        prototype: HTMLEventsTelemetryPanelElement;
+        new (): HTMLEventsTelemetryPanelElement;
+    };
     interface HTMLTestComponentElement extends Components.TestComponent, HTMLStencilElement {
     }
     var HTMLTestComponentElement: {
@@ -87,6 +95,7 @@ declare global {
         "app-root": HTMLAppRootElement;
         "custom-dropdown": HTMLCustomDropdownElement;
         "custom-input": HTMLCustomInputElement;
+        "events-telemetry-panel": HTMLEventsTelemetryPanelElement;
         "test-component": HTMLTestComponentElement;
         "trade-order-entry": HTMLTradeOrderEntryElement;
         "user-profile": HTMLUserProfileElement;
@@ -110,6 +119,8 @@ declare namespace LocalJSX {
         "type"?: string;
         "value"?: string;
     }
+    interface EventsTelemetryPanel {
+    }
     interface TestComponent {
     }
     interface TradeOrderEntry {
@@ -123,6 +134,7 @@ declare namespace LocalJSX {
         "app-root": AppRoot;
         "custom-dropdown": CustomDropdown;
         "custom-input": CustomInput;
+        "events-telemetry-panel": EventsTelemetryPanel;
         "test-component": TestComponent;
         "trade-order-entry": TradeOrderEntry;
         "user-profile": UserProfile;
@@ -136,6 +148,7 @@ declare module "@stencil/core" {
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
             "custom-dropdown": LocalJSX.CustomDropdown & JSXBase.HTMLAttributes<HTMLCustomDropdownElement>;
             "custom-input": LocalJSX.CustomInput & JSXBase.HTMLAttributes<HTMLCustomInputElement>;
+            "events-telemetry-panel": LocalJSX.EventsTelemetryPanel & JSXBase.HTMLAttributes<HTMLEventsTelemetryPanelElement>;
             "test-component": LocalJSX.TestComponent & JSXBase.HTMLAttributes<HTMLTestComponentElement>;
             "trade-order-entry": LocalJSX.TradeOrderEntry & JSXBase.HTMLAttributes<HTMLTradeOrderEntryElement>;
             "user-profile": LocalJSX.UserProfile & JSXBase.HTMLAttributes<HTMLUserProfileElement>;

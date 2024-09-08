@@ -57,14 +57,17 @@ export class AppRoot {
 
   render() {
     return (
-      <div>
+      <div class="app-container">
         <header>
-          <h1>Address Form with Telemetry</h1>
+          <h1>Stencil Components with Telemetry - Demo</h1>
         </header>
         <main>
-          <trade-order-entry></trade-order-entry>
-          <address-form></address-form>
-          <user-profile user-id="12345" userService={this.userService}></user-profile>
+          <div class="forms-row">
+            <trade-order-entry></trade-order-entry>
+            <address-form></address-form>
+            <user-profile user-id="12345" userService={this.userService}></user-profile>
+          </div>
+          <events-telemetry-panel></events-telemetry-panel>
         </main>
       </div>
     );

@@ -1,4 +1,4 @@
-# Stencil Components Demo with Enhanced Telemetry -  Documentation
+# Stencil Components Demo with Telemetry -  Documentation
 
 ## Table of Contents
 
