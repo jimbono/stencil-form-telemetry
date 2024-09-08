@@ -5,11 +5,11 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { TelemetryEvent } from "./utils/telemetry";
 export namespace Components {
-    interface AppRoot {
+    interface AddressForm {
     }
-    interface CleanForm {
-        "submitButtonText": string;
+    interface AppRoot {
     }
     interface TelemetryWrapper {
         "componentId": string;
@@ -17,33 +17,22 @@ export namespace Components {
     interface TestComponent {
     }
 }
-export interface CleanFormCustomEvent<T> extends CustomEvent<T> {
+export interface AddressFormCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLCleanFormElement;
+    target: HTMLAddressFormElement;
 }
 declare global {
+    interface HTMLAddressFormElement extends Components.AddressForm, HTMLStencilElement {
+    }
+    var HTMLAddressFormElement: {
+        prototype: HTMLAddressFormElement;
+        new (): HTMLAddressFormElement;
+    };
     interface HTMLAppRootElement extends Components.AppRoot, HTMLStencilElement {
     }
     var HTMLAppRootElement: {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
-    };
-    interface HTMLCleanFormElementEventMap {
-        "telemetryEvent": any;
-    }
-    interface HTMLCleanFormElement extends Components.CleanForm, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLCleanFormElementEventMap>(type: K, listener: (this: HTMLCleanFormElement, ev: CleanFormCustomEvent<HTMLCleanFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLCleanFormElementEventMap>(type: K, listener: (this: HTMLCleanFormElement, ev: CleanFormCustomEvent<HTMLCleanFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLCleanFormElement: {
-        prototype: HTMLCleanFormElement;
-        new (): HTMLCleanFormElement;
     };
     interface HTMLTelemetryWrapperElement extends Components.TelemetryWrapper, HTMLStencilElement {
     }
@@ -58,18 +47,17 @@ declare global {
         new (): HTMLTestComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "address-form": HTMLAddressFormElement;
         "app-root": HTMLAppRootElement;
-        "clean-form": HTMLCleanFormElement;
         "telemetry-wrapper": HTMLTelemetryWrapperElement;
         "test-component": HTMLTestComponentElement;
     }
 }
 declare namespace LocalJSX {
-    interface AppRoot {
+    interface AddressForm {
+        "onTelemetryEvent"?: (event: AddressFormCustomEvent<TelemetryEvent>) => void;
     }
-    interface CleanForm {
-        "onTelemetryEvent"?: (event: CleanFormCustomEvent<any>) => void;
-        "submitButtonText"?: string;
+    interface AppRoot {
     }
     interface TelemetryWrapper {
         "componentId"?: string;
@@ -77,8 +65,8 @@ declare namespace LocalJSX {
     interface TestComponent {
     }
     interface IntrinsicElements {
+        "address-form": AddressForm;
         "app-root": AppRoot;
-        "clean-form": CleanForm;
         "telemetry-wrapper": TelemetryWrapper;
         "test-component": TestComponent;
     }
@@ -87,8 +75,8 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "address-form": LocalJSX.AddressForm & JSXBase.HTMLAttributes<HTMLAddressFormElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
-            "clean-form": LocalJSX.CleanForm & JSXBase.HTMLAttributes<HTMLCleanFormElement>;
             "telemetry-wrapper": LocalJSX.TelemetryWrapper & JSXBase.HTMLAttributes<HTMLTelemetryWrapperElement>;
             "test-component": LocalJSX.TestComponent & JSXBase.HTMLAttributes<HTMLTestComponentElement>;
         }

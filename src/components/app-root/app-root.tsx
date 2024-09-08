@@ -10,14 +10,11 @@ export class AppRoot {
     return (
       <div>
         <header>
-          <h1>Stencil Form Telemetry Builder - Demo</h1>
+          <h1>Address Form with Telemetry</h1>
         </header>
         <main>
           <telemetry-wrapper component-id="address-form">
-            <clean-form 
-              id="address-form" 
-              submit-button-text="Submit Address"
-            ></clean-form>
+            <address-form></address-form>
           </telemetry-wrapper>
         </main>
       </div>

@@ -1,5 +1,5 @@
 import { Component, Element, Prop, h, Listen } from '@stencil/core';
-import { telemetry } from '../../utils/telemetry';
+import { telemetry, TelemetryEvent } from '../../utils/telemetry';
 
 @Component({
   tag: 'telemetry-wrapper',
@@ -11,20 +11,34 @@ export class TelemetryWrapper {
 
   private renderTimestamp: number;
   private intersectionObserver: IntersectionObserver;
+  private worker: Worker;
 
   componentWillLoad() {
     this.renderTimestamp = performance.now();
+    this.worker = new Worker('/assets/telemetry-worker.js');
+    this.worker.onmessage = (event) => {
+      if (event.data.type === 'processingComplete') {
+        console.log('Telemetry processing complete:', event.data.result);
+      }
+    };
   }
 
   componentDidLoad() {
     const timeToRender = performance.now() - this.renderTimestamp;
-    telemetry.trackRender(this.componentId, timeToRender);
+    telemetry.trackEvent({
+      type: 'componentRender',
+      timestamp: new Date().toISOString(),
+      details: { componentId: this.componentId, renderTime: timeToRender }
+    });
     this.observeVisibility();
   }
 
   disconnectedCallback() {
     if (this.intersectionObserver) {
       this.intersectionObserver.disconnect();
+    }
+    if (this.worker) {
+      this.worker.terminate();
     }
   }
 
@@ -33,7 +47,11 @@ export class TelemetryWrapper {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            telemetry.trackVisibility(this.componentId);
+            telemetry.trackEvent({
+              type: 'componentVisible',
+              timestamp: new Date().toISOString(),
+              details: { componentId: this.componentId }
+            });
             this.intersectionObserver.disconnect();
           }
         });
@@ -45,8 +63,12 @@ export class TelemetryWrapper {
   }
 
   @Listen('telemetryEvent', { capture: true })
-  handleTelemetryEvent(event: CustomEvent) {
-    telemetry.trackInteraction(this.componentId, event.type, event.detail);
+  handleTelemetryEvent(event: CustomEvent<TelemetryEvent>) {
+    // Offload intensive processing to Web Worker
+    this.worker.postMessage({ type: 'processTelemetry', data: event.detail });
+    
+    // Track the event
+    telemetry.trackEvent(event.detail);
   }
 
   render() {

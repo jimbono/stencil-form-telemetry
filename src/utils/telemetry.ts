@@ -1,8 +1,17 @@
-export class Telemetry {
+import { TelemetryBatcher } from './telemetry-batcher'
+
+export interface TelemetryEvent {
+  type: string;
+  timestamp: string;
+  details: any;
+}
+
+class Telemetry {
   private static instance: Telemetry;
-  private endpoint: string = '/analytics-endpoint';
+  private batcher: TelemetryBatcher;
 
   private constructor() {
+    this.batcher = new TelemetryBatcher();
     this.trackPageMetrics();
   }
 
@@ -13,54 +22,34 @@ export class Telemetry {
     return Telemetry.instance;
   }
 
-  public setEndpoint(endpoint: string): void {
-    this.endpoint = endpoint;
-  }
-
-  public sendMetrics(data: any): void {
-    console.log('Telemetry data:', data);  // For local testing
-    if (navigator.sendBeacon) {
-      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-      navigator.sendBeacon(this.endpoint, blob);
-    } else {
-      fetch(this.endpoint, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        keepalive: true,
-      });
+  public trackEvent(event: TelemetryEvent): void {
+    if (this.shouldSampleEvent(event.type)) {
+      this.batcher.addEvent(event);
     }
   }
 
-  public trackRender(componentId: string, renderTime: number): void {
-    this.sendMetrics({ type: 'timeToRender', componentId, value: renderTime });
-  }
-
-  public trackVisibility(componentId: string): void {
-    this.sendMetrics({ type: 'componentVisible', componentId });
-  }
-
-  public trackInteraction(componentId: string, interactionType: string, details?: any): void {
-    this.sendMetrics({ type: 'interaction', componentId, interactionType, details });
+  private shouldSampleEvent(eventType: string): boolean {
+    const samplingRates = {
+      'formSubmit': 1,    // 100% sampling
+      'fieldBlur': 0.1,   // 10% sampling
+      'default': 0.5      // 50% sampling
+    };
+    const rate = samplingRates[eventType] || samplingRates['default'];
+    return Math.random() < rate;
   }
 
   private trackPageMetrics(): void {
     if ('requestIdleCallback' in window) {
       requestIdleCallback(() => {
-        const pageLoadTime = performance.now();
         const navigationTiming = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-        const fpTime = performance.getEntriesByName('first-paint')[0]?.startTime;
-        const fcpTime = performance.getEntriesByName('first-contentful-paint')[0]?.startTime;
-
-        this.sendMetrics({
+        this.trackEvent({
           type: 'pageMetrics',
-          pageLoadTime,
-          domInteractive: navigationTiming.domInteractive,
-          domComplete: navigationTiming.domComplete,
-          firstPaint: fpTime,
-          firstContentfulPaint: fcpTime,
+          timestamp: new Date().toISOString(),
+          details: {
+            pageLoadTime: navigationTiming.loadEventEnd - navigationTiming.loadEventStart,
+            domInteractive: navigationTiming.domInteractive,
+            domComplete: navigationTiming.domComplete,
+          }
         });
       });
     }
