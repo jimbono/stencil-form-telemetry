@@ -5,7 +5,7 @@ class TelemetryService {
   private static instance: TelemetryService;
   private batcher: TelemetryBatcher;
   private samplingRates: { [key: string]: number } = {
-    [TelemetryEventType.FormSubmit]: 1,
+    /*[TelemetryEventType.FormSubmit]: 1,
     [TelemetryEventType.FieldBlur]: 0.1,
     [TelemetryEventType.ComponentRender]: 0.5,
     [TelemetryEventType.ComponentVisible]: 0.5,
@@ -13,7 +13,17 @@ class TelemetryService {
     [TelemetryEventType.PerformanceMetric]: 1,
     [TelemetryEventType.ErrorOccurred]: 1,
     [TelemetryEventType.FormCompletionTime]: 1,  // Always capture form completion time
-    'default': 0.5
+    'default': 0.5*/
+
+    [TelemetryEventType.FormSubmit]: 0.5,
+    [TelemetryEventType.FieldBlur]: 0.5,
+    [TelemetryEventType.ComponentRender]: 0.5,
+    [TelemetryEventType.ComponentVisible]: 0.5,
+    [TelemetryEventType.UserInteraction]: 0.5,
+    [TelemetryEventType.PerformanceMetric]: 0.5,
+    [TelemetryEventType.ErrorOccurred]: 0.5,
+    [TelemetryEventType.FormCompletionTime]: 1,  // Always capture form completion time
+    'default': 1
   };
 
   private constructor() {
