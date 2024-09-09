@@ -8,7 +8,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    height: 300px;
+    height: 500px; /* Increased height to show more rows */
     display: flex;
     flex-direction: column;
   }
@@ -75,6 +75,7 @@
   @media (max-width: 400px) {
     .events-panel {
       padding: 10px;
+      height: 400px; /* Slightly reduced height for very small screens */
     }
   
     h3 {
