@@ -1,4 +1,4 @@
-# clean-form
+# events-telemetry-panel
 
 
 
@@ -11,16 +11,11 @@
 
  - [app-root](../app-root)
 
-### Depends on
-
-- [custom-input](../custom-input)
-
 ### Graph
 ```mermaid
 graph TD;
-  address-form --> custom-input
-  app-root --> address-form
-  style address-form fill:#f9f,stroke:#333,stroke-width:4px
+  app-root --> events-telemetry-panel
+  style events-telemetry-panel fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

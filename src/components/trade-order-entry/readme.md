@@ -1,4 +1,4 @@
-# clean-form
+# trade-order-entry
 
 
 
@@ -13,14 +13,16 @@
 
 ### Depends on
 
+- [custom-dropdown](../custom-dropdown)
 - [custom-input](../custom-input)
 
 ### Graph
 ```mermaid
 graph TD;
-  address-form --> custom-input
-  app-root --> address-form
-  style address-form fill:#f9f,stroke:#333,stroke-width:4px
+  trade-order-entry --> custom-dropdown
+  trade-order-entry --> custom-input
+  app-root --> trade-order-entry
+  style trade-order-entry fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

@@ -83,6 +83,10 @@ stencil-form-telemetry/
    npm run build
    ```
 
+
+## demo site
+https://stencil-form-telemetry.pages.dev/
+
 ## Usage
 
 The dashboard components can be used in your HTML as follows:
