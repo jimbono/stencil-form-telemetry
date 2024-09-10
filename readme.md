@@ -2,6 +2,9 @@
 
 This project implements a demo of stencil components with built-in telemetry capabilities. It demonstrates how to effectively collect user behavior data and business metrics while maintaining high performance and scalability.
 
+## demo site
+https://stencil-form-telemetry.pages.dev/
+
 ## Features
 
 - Trade Order Entry component for stock trading
@@ -82,10 +85,6 @@ stencil-form-telemetry/
    ```
    npm run build
    ```
-
-
-## demo site
-https://stencil-form-telemetry.pages.dev/
 
 ## Usage
 
