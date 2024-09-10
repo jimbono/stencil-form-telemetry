@@ -53,23 +53,24 @@ export class AddressForm {
     this.intersectionObserver.observe(this.el);
   }
 
-  handleInput(event: Event, field: string) {
-    const input = event.target as HTMLInputElement;
-    this.formData = { ...this.formData, [field]: input.value };
+  handleValueChange(event: CustomEvent<{ name: string, value: string }>) {
+    this.formData = { ...this.formData, [event.detail.name]: event.detail.value };
   }
 
-  handleBlur(event: Event, field: string) {
-    const input = event.target as HTMLInputElement;
-    telemetry.emit(TelemetryEventType.FieldBlur, { field, value: input.value });
+  handleBlur(event: CustomEvent<{ name: string, value: string }>) {
+    telemetry.emit(TelemetryEventType.FieldBlur, { 
+      field: event.detail.name, 
+      value: event.detail.value 
+    });
   }
 
   handleSubmit(event: Event) {
     event.preventDefault();
     const completionTime = performance.now() - this.formStartTime;
     
-    telemetry.emit(TelemetryEventType.FormSubmit, this.formData);
-    telemetry.emit(TelemetryEventType.FormCompletionTime, {
+    telemetry.emit(TelemetryEventType.FormSubmit, {
       formId: 'AddressForm',
+      formData: this.formData,
       completionTime: completionTime,
       fieldCount: this.formFields.length
     });
@@ -85,40 +86,16 @@ export class AddressForm {
     return (
       <form onSubmit={(e) => this.handleSubmit(e)}>
         <h2>Address Form</h2>
-        <div class="form-row">
+        {this.formFields.map(field => (
           <custom-input
-            label="Name"
-            name="name"
-            type="text"
-            onValueChanged={(e) => this.handleInput(e, 'name')}
+            key={field}
+            label={field.charAt(0).toUpperCase() + field.slice(1)}
+            name={field}
+            value={this.formData[field] || ''}
+            onValueChanged={(e) => this.handleValueChange(e)}
+            onInputBlur={(e) => this.handleBlur(e)}
           ></custom-input>
-          <custom-input
-            label="Street"
-            name="street"
-            type="text"
-            onValueChanged={(e) => this.handleInput(e, 'street')}
-          ></custom-input>
-        </div>
-        <div class="form-row">
-          <custom-input
-            label="City"
-            name="city"
-            type="text"
-            onValueChanged={(e) => this.handleInput(e, 'city')}
-          ></custom-input>
-          <custom-input
-            label="State"
-            name="state"
-            type="text"
-            onValueChanged={(e) => this.handleInput(e, 'state')}
-          ></custom-input>
-        </div>
-        <custom-input
-          label="Zip Code"
-          name="zipCode"
-          type="text"
-          onValueChanged={(e) => this.handleInput(e, 'zipCode')}
-        ></custom-input>
+        ))}
         <button type="submit">Submit Address</button>
       </form>
     );

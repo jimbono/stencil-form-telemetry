@@ -23,7 +23,6 @@ graph TD;
   app-root --> events-telemetry-panel
   trade-order-entry --> custom-dropdown
   trade-order-entry --> custom-input
-  address-form --> custom-input
   user-profile --> custom-input
   style app-root fill:#f9f,stroke:#333,stroke-width:4px
 ```

@@ -1,6 +1,4 @@
 import { Component, Prop, Event, EventEmitter, h } from '@stencil/core';
-import { telemetry } from '../../utils/telemetry-service';
-import { TelemetryEventType } from '../../utils/telemetry-types';
 
 @Component({
   tag: 'custom-input',
@@ -13,19 +11,16 @@ export class CustomInput {
   @Prop() type: string = 'text';
   @Prop() value: string = '';
   @Event() valueChanged: EventEmitter<{ name: string, value: string }>;
+  @Event() inputBlur: EventEmitter<{ name: string, value: string }>;
 
   handleInput(event: Event) {
     const input = event.target as HTMLInputElement;
     this.valueChanged.emit({ name: this.name, value: input.value });
   }
 
-  handleBlur(event: Event) {
+  handleBlur(event: FocusEvent) {
     const input = event.target as HTMLInputElement;
-    telemetry.emit(TelemetryEventType.FieldBlur, {
-      componentName: 'CustomInput',
-      field: this.name,
-      value: input.value
-    });
+    this.inputBlur.emit({ name: this.name, value: input.value });
   }
 
   render() {

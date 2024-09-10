@@ -26,14 +26,12 @@
 
 ### Used by
 
- - [address-form](../address-form)
  - [trade-order-entry](../trade-order-entry)
  - [user-profile](../user-profile)
 
 ### Graph
 ```mermaid
 graph TD;
-  address-form --> custom-input
   trade-order-entry --> custom-input
   user-profile --> custom-input
   style custom-input fill:#f9f,stroke:#333,stroke-width:4px

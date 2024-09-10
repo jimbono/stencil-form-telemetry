@@ -115,6 +115,7 @@ declare namespace LocalJSX {
     interface CustomInput {
         "label"?: string;
         "name"?: string;
+        "onInputBlur"?: (event: CustomInputCustomEvent<{ name: string, value: string }>) => void;
         "onValueChanged"?: (event: CustomInputCustomEvent<{ name: string, value: string }>) => void;
         "type"?: string;
         "value"?: string;
