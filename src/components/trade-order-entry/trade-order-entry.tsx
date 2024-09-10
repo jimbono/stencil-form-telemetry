@@ -85,6 +85,7 @@ export class TradeOrderEntry {
 
   async fetchSymbolInfo(symbol: string) {
     // This is a mock function. In a real application, you would call an API to get this data.
+    symbol = symbol;
     const mockFetch = async () => {
       await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
       return {
